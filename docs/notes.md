@@ -297,13 +297,87 @@ ModelCheckpoint — saves best model by val_accuracy.
 EarlyStopping — stops training when val_accuracy plateaus.
 
 Status:
-Pending — run: python -m src.training.train_efficientnet
+Completed
 
-Results:
-To be completed after training.
+Total Parameters:
+4,214,313 (16.08 MB)
 
-Artifacts (expected):
-- results/efficientnet/efficientnet.keras
-- results/efficientnet/efficientnet_best.keras
+Trainable (Phase 1):
+164,742 (classification head only)
+
+---
+
+Phase 1 Results (Epochs 1–10, Base Frozen, lr=1e-3):
+
+Best Validation Accuracy:
+89.90% at Epoch 10
+
+Training Accuracy at best epoch:
+98.80%
+
+Validation Loss at best epoch:
+0.3386
+
+Note: val_accuracy improved every epoch from 86.34% to 89.90%.
+EarlyStopping did not trigger — model kept improving through all 10 epochs.
+
+---
+
+Phase 2 Results (Epochs 1–6, Top 30 Layers Unfrozen, lr=1e-5):
+
+Phase 2 never exceeded Phase 1 best (89.90%).
+Best Phase 2 epoch: Epoch 1 with val_accuracy 89.50%.
+EarlyStopping triggered at Epoch 6. Weights restored from Phase 2 Epoch 1.
+
+---
+
+Final Results (Best Model via ModelCheckpoint):
+
+Validation Accuracy:
+89.90%
+
+Validation Loss:
+0.3386
+
+---
+
+Comparison vs all models:
+
+CNN Baseline:    56.44%
+MobileNetV2:     87.13%  (+30.69 pp vs CNN)
+EfficientNetB0:  89.90%  (+33.46 pp vs CNN, +2.77 pp vs MobileNetV2)
+
+---
+
+Observations:
+
+- EfficientNetB0 is the best performing model across all three experiments.
+- Phase 1 showed continuous improvement throughout all 10 epochs, suggesting the
+  EfficientNet feature extractor is particularly well-suited to visual waste classification.
+- Phase 2 fine-tuning did not improve results — the frozen base already generalized well.
+  EarlyStopping correctly halted training after 6 epochs without improvement.
+- Validation loss (0.3386) is significantly lower than MobileNetV2 (0.4410),
+  indicating more confident and stable predictions.
+- EfficientNetB0 achieved 89.90% accuracy with only ~4.2M parameters,
+  demonstrating strong efficiency relative to model size.
+- The +2.77 pp improvement over MobileNetV2 confirms EfficientNetB0 as the
+  recommended architecture for this waste classification task.
+
+Artifacts:
+- results/efficientnet/efficientnet.keras         (best model)
+- results/efficientnet/efficientnet_best.keras    (checkpoint copy)
 - results/efficientnet/accuracy.png
 - results/efficientnet/loss.png
+
+---
+
+## Final Model Comparison Summary
+
+| Model           | Val Accuracy | Val Loss | Parameters  | Training Strategy            |
+|-----------------|-------------|----------|-------------|------------------------------|
+| CNN Baseline    | 56.44%      | 1.1258   | 110,534     | Trained from scratch, 10 ep  |
+| MobileNetV2     | 87.13%      | 0.4410   | 2,422,726   | Transfer learning, 2-phase   |
+| EfficientNetB0  | 89.90%      | 0.3386   | 4,214,313   | Transfer learning, 2-phase   |
+
+Best Model: EfficientNetB0
+Improvement over baseline: +33.46 percentage points

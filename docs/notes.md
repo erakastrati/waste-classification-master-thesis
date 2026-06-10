@@ -100,58 +100,210 @@ Epochs:
 10
 
 Status:
-Training pending
+Completed
 
 Results:
-To be completed after model training.
-
-EXP-001 Results
 
 Epochs:
 10
 
-Train Accuracy:
-54.65%
-
-Validation Accuracy:
-51.88%
-
-Train Loss:
-1.1716
-
-Validation Loss:
-1.1766
-
-Observations:
-
-- The model learned meaningful visual patterns.
-- No significant overfitting was observed.
-- Performance remains limited, suggesting that more advanced architectures may achieve better results.
-
-
-EXP-001 Results
-
-Architecture:
-CNN Baseline
-
-Total Parameters:
-110,534
-
 Training Accuracy:
-54.90%
+~67%
 
 Validation Accuracy:
-50.30%
+56.44%
 
 Training Loss:
-1.15
+~0.92
 
 Validation Loss:
-1.27
+1.1258
 
 Observations:
 
-- Stable convergence observed.
-- No severe overfitting detected.
-- Validation accuracy remained around 50%.
-- Baseline performance leaves room for improvement using transfer learning architectures.
+- The model learned meaningful visual patterns from scratch.
+- No significant overfitting was observed over 10 epochs.
+- Validation accuracy stabilized around 56%, which is expected for a lightweight custom CNN on a relatively small and imbalanced dataset.
+- The trash class (137 images) likely contributed to misclassifications due to underrepresentation.
+- This result establishes the baseline for comparison with transfer learning architectures.
+
+Artifacts:
+- results/cnn_baseline/cnn_baseline.keras
+- results/cnn_baseline/accuracy.png
+- results/cnn_baseline/loss.png
+
+---
+
+### EXP-002
+
+Model:
+MobileNetV2 (Transfer Learning)
+
+Architecture:
+
+* MobileNetV2 base (ImageNet pretrained, frozen in Phase 1)
+* GlobalAveragePooling2D
+* Dense(128, ReLU)
+* Dropout(0.3)
+* Dense(6, Softmax)
+
+Input Shape:
+224x224x3
+
+Total Parameters:
+~2.3M (base) + classification head
+
+Preprocessing:
+MobileNetV2 preprocess_input (scales to [-1, 1])
+
+Optimizer:
+Adam
+
+Loss Function:
+Sparse Categorical Crossentropy
+
+Metrics:
+Accuracy
+
+Training Strategy:
+
+Phase 1 (Epochs 1-10):
+Base model frozen. Only classification head trained.
+
+Phase 2 (Epochs 11-20):
+Top 30 layers of base unfrozen. Fine-tuning applied.
+
+Status:
+Completed (Final Run — v2 with corrected fine-tuning)
+
+Total Parameters:
+2,422,726 (9.24 MB)
+
+Trainable (Phase 1):
+164,742 (classification head only)
+
+---
+
+Phase 1 Results (Epochs 1–10, Base Frozen, lr=1e-3):
+
+Best Validation Accuracy:
+86.73% at Epoch 5
+
+Training Accuracy at best epoch:
+93.89%
+
+Validation Loss at best epoch:
+0.4611
+
+Note: EarlyStopping triggered at Epoch 10. Weights restored from Epoch 5.
+
+---
+
+Phase 2 Results (Epochs 1–14, Top 30 Layers Unfrozen, lr=1e-5):
+
+Best Validation Accuracy:
+87.13% at Phase 2 Epoch 9
+
+Training Accuracy at best epoch:
+96.59%
+
+Validation Loss at best epoch:
+0.4410
+
+Note: EarlyStopping triggered at Phase 2 Epoch 14. Weights restored from Phase 2 Epoch 9.
+Fine-tuning was fully stable — no loss spikes observed.
+
+---
+
+Final Results (Best Model via ModelCheckpoint):
+
+Validation Accuracy:
+87.13%
+
+Validation Loss:
+0.4410
+
+---
+
+Comparison vs CNN Baseline:
+
+CNN Baseline:           56.44%
+MobileNetV2 (final):   87.13%  (+30.69 pp)
+
+---
+
+Observations:
+
+- Fine-tuning with lr=1e-5 was fully stable. No catastrophic forgetting occurred.
+  Validation loss remained consistently around 0.44 throughout Phase 2.
+- Phase 2 provided a marginal improvement over Phase 1 peak (86.73% → 87.13%),
+  confirming that careful fine-tuning with a low learning rate can improve generalization.
+- ModelCheckpoint saved the best model across all epochs of both phases automatically.
+- EarlyStopping prevented unnecessary computation once the model plateaued.
+- MobileNetV2 represents a +30.69 percentage point improvement over the CNN baseline,
+  demonstrating the significant advantage of transfer learning on small datasets.
+- The model plateau around 87% suggests the dataset size is the main limiting factor.
+
+Artifacts:
+- results/mobilenet/mobilenet.keras         (best model)
+- results/mobilenet/mobilenet_best.keras    (checkpoint copy)
+- results/mobilenet/accuracy.png
+- results/mobilenet/loss.png
+
+---
+
+### EXP-003
+
+Model:
+EfficientNetB0 (Transfer Learning)
+
+Architecture:
+
+* EfficientNetB0 base (ImageNet pretrained, frozen in Phase 1)
+* GlobalAveragePooling2D
+* Dense(128, ReLU)
+* Dropout(0.3)
+* Dense(6, Softmax)
+
+Input Shape:
+224x224x3
+
+Total Parameters:
+~4.05M (base) + classification head
+
+Preprocessing:
+EfficientNetB0 preprocess_input (scales pixel values for EfficientNet internal normalization)
+
+Optimizer:
+Adam
+
+Loss Function:
+Sparse Categorical Crossentropy
+
+Metrics:
+Accuracy
+
+Training Strategy:
+
+Phase 1 (Epochs 1-10):
+Base model frozen. Only classification head trained. lr=1e-3.
+
+Phase 2 (Epochs up to 15):
+Top 30 layers of base unfrozen. Fine-tuning with lr=1e-5.
+EarlyStopping with patience=5.
+
+Callbacks:
+ModelCheckpoint — saves best model by val_accuracy.
+EarlyStopping — stops training when val_accuracy plateaus.
+
+Status:
+Pending — run: python -m src.training.train_efficientnet
+
+Results:
+To be completed after training.
+
+Artifacts (expected):
+- results/efficientnet/efficientnet.keras
+- results/efficientnet/efficientnet_best.keras
+- results/efficientnet/accuracy.png
+- results/efficientnet/loss.png

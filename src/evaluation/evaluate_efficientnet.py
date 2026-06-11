@@ -10,6 +10,7 @@ from sklearn.metrics import (
 
 from tensorflow.keras.models import load_model
 from tensorflow.keras.preprocessing import image_dataset_from_directory
+from tensorflow.keras.applications.efficientnet import preprocess_input
 
 
 # ==========================================
@@ -17,7 +18,7 @@ from tensorflow.keras.preprocessing import image_dataset_from_directory
 # ==========================================
 
 os.makedirs(
-    "results/cnn_baseline",
+    "results/efficientnet",
     exist_ok=True
 )
 
@@ -27,7 +28,7 @@ os.makedirs(
 # ==========================================
 
 model = load_model(
-    "results/cnn_baseline/cnn_baseline.keras"
+    "results/efficientnet/efficientnet.keras"
 )
 
 
@@ -62,7 +63,7 @@ for x_batch, y_batch in val_ds:
 X_raw = np.concatenate(all_images, axis=0)
 y_true = np.concatenate(all_labels, axis=0).astype(int)
 
-X = X_raw / 255.0
+X = preprocess_input(X_raw)
 
 
 # ==========================================
@@ -85,12 +86,12 @@ report = classification_report(
 )
 
 print("\n==============================")
-print("CNN BASELINE — Classification Report")
+print("EfficientNetB0 — Classification Report")
 print("==============================\n")
 print(report)
 
-with open("results/cnn_baseline/classification_report.txt", "w") as f:
-    f.write("CNN BASELINE — Classification Report\n\n")
+with open("results/efficientnet/classification_report.txt", "w") as f:
+    f.write("EfficientNetB0 — Classification Report\n\n")
     f.write(report)
 
 
@@ -111,12 +112,12 @@ sns.heatmap(
     yticklabels=class_names
 )
 
-plt.title("CNN Baseline — Confusion Matrix")
+plt.title("EfficientNetB0 — Confusion Matrix")
 plt.xlabel("Predicted")
 plt.ylabel("Actual")
 plt.tight_layout()
 
-plt.savefig("results/cnn_baseline/confusion_matrix.png")
+plt.savefig("results/efficientnet/confusion_matrix.png")
 plt.close()
 
 print("Confusion matrix saved.")

@@ -381,3 +381,86 @@ Artifacts:
 
 Best Model: EfficientNetB0
 Improvement over baseline: +33.46 percentage points
+
+---
+
+## Detailed Evaluation Results (Per-Class Metrics)
+
+Validation set: 505 images across 6 classes
+Evaluation method: shuffle=True, seed=42 (identical split to training)
+
+### CNN Baseline — Per-Class F1
+
+| Class     | Precision | Recall | F1-Score | Support |
+|-----------|-----------|--------|----------|---------|
+| cardboard | 0.75      | 0.72   | 0.74     | 69      |
+| glass     | 0.49      | 0.49   | 0.49     | 102     |
+| metal     | 0.49      | 0.61   | 0.55     | 88      |
+| paper     | 0.56      | 0.79   | 0.66     | 123     |
+| plastic   | 0.65      | 0.38   | 0.48     | 89      |
+| trash     | 0.00      | 0.00   | 0.00     | 34      |
+| **macro avg** | **0.49** | **0.50** | **0.48** | 505 |
+
+Observations:
+- trash class completely failed (F1=0.00) — model never predicted it, likely due to class imbalance (34 samples).
+- Best class: cardboard (F1=0.74).
+- Worst classes: trash, plastic, glass.
+
+---
+
+### MobileNetV2 — Per-Class F1
+
+| Class     | Precision | Recall | F1-Score | Support |
+|-----------|-----------|--------|----------|---------|
+| cardboard | 0.89      | 0.91   | 0.90     | 69      |
+| glass     | 0.89      | 0.90   | 0.90     | 102     |
+| metal     | 0.82      | 0.92   | 0.87     | 88      |
+| paper     | 0.93      | 0.91   | 0.92     | 123     |
+| plastic   | 0.86      | 0.80   | 0.83     | 89      |
+| trash     | 0.75      | 0.62   | 0.68     | 34      |
+| **macro avg** | **0.85** | **0.84** | **0.85** | 505 |
+
+Observations:
+- Strong performance across all classes.
+- trash class improved significantly (F1=0.68) compared to CNN baseline.
+- Best class: paper (F1=0.92).
+- Weakest class: trash (F1=0.68) — expected due to low sample count.
+
+---
+
+### EfficientNetB0 — Per-Class F1
+
+| Class     | Precision | Recall | F1-Score | Support |
+|-----------|-----------|--------|----------|---------|
+| cardboard | 0.96      | 0.94   | 0.95     | 69      |
+| glass     | 0.87      | 0.89   | 0.88     | 102     |
+| metal     | 0.89      | 0.89   | 0.89     | 88      |
+| paper     | 0.94      | 0.94   | 0.94     | 123     |
+| plastic   | 0.88      | 0.85   | 0.87     | 89      |
+| trash     | 0.82      | 0.82   | 0.82     | 34      |
+| **macro avg** | **0.89** | **0.89** | **0.89** | 505 |
+
+Observations:
+- Best performing model across every single class.
+- trash class reached F1=0.82 — strong result for a class with only 34 validation samples.
+- Best class: cardboard (F1=0.95).
+- Most balanced model: all classes above F1=0.82.
+- Macro avg F1=0.89 confirms consistent performance regardless of class imbalance.
+
+---
+
+### Cross-Model F1 Comparison (macro avg)
+
+| Model          | Accuracy | Macro F1 | Weighted F1 |
+|----------------|----------|----------|-------------|
+| CNN Baseline   | 0.56     | 0.48     | 0.54        |
+| MobileNetV2    | 0.87     | 0.85     | 0.87        |
+| EfficientNetB0 | 0.90     | 0.89     | 0.90        |
+
+Artifacts:
+- results/cnn_baseline/confusion_matrix.png
+- results/cnn_baseline/classification_report.txt
+- results/mobilenet/confusion_matrix.png
+- results/mobilenet/classification_report.txt
+- results/efficientnet/confusion_matrix.png
+- results/efficientnet/classification_report.txt

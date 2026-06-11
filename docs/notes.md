@@ -481,11 +481,27 @@ Required:
 
 Status: Pending
 
-### NEXT-02 — Training Curve Comparison Plot
-Single figure comparing accuracy curves of all 3 models on the same axes.
-Useful for thesis Chapter: Results and Discussion.
+### NEXT-02 — Model Comparison Plots
 
-Status: Pending
+Status: Completed
+
+Generated 3 comparison figures for thesis Results chapter:
+
+1. accuracy_f1_comparison.png
+   Grouped bar chart: Validation Accuracy vs Macro F1-Score per model.
+   CNN: Acc=0.56, F1=0.48 | MobileNetV2: Acc=0.87, F1=0.85 | EfficientNetB0: Acc=0.90, F1=0.89
+
+2. per_class_f1_comparison.png
+   Per-class F1-Score for all 6 waste categories across all 3 models.
+   Shows CNN failure on trash (F1=0.00) vs EfficientNetB0 robustness (F1=0.82).
+
+3. val_loss_comparison.png
+   Validation loss bar chart: CNN=1.1258, MobileNetV2=0.4410, EfficientNetB0=0.3386
+
+Artifacts:
+- results/comparison/accuracy_f1_comparison.png
+- results/comparison/per_class_f1_comparison.png
+- results/comparison/val_loss_comparison.png
 
 ### NEXT-03 — Thesis Write-Up
 Chapters that can now be written based on collected data:

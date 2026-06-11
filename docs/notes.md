@@ -464,3 +464,33 @@ Artifacts:
 - results/mobilenet/classification_report.txt
 - results/efficientnet/confusion_matrix.png
 - results/efficientnet/classification_report.txt
+
+---
+
+## Remaining Work
+
+### NEXT-01 — Real-World Testing
+Test all three saved models on data/real_test_dataset/ (images collected
+outside the TrashNet dataset). This validates generalization to real conditions.
+
+Required:
+- src/evaluation/evaluate_real_world.py
+- Predict with all 3 models on same real images
+- Compare predictions side-by-side
+- Document results in notes.md
+
+Status: Pending
+
+### NEXT-02 — Training Curve Comparison Plot
+Single figure comparing accuracy curves of all 3 models on the same axes.
+Useful for thesis Chapter: Results and Discussion.
+
+Status: Pending
+
+### NEXT-03 — Thesis Write-Up
+Chapters that can now be written based on collected data:
+- Dataset and Preprocessing
+- Model Architectures
+- Training Configuration
+- Results: Accuracy, Loss, F1, Confusion Matrices
+- Discussion: CNN vs Transfer Learning, class imbalance impact, trash class behavior

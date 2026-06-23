@@ -660,3 +660,38 @@ Chapters that can now be written based on collected data:
 - Training Configuration
 - Results: Accuracy, Loss, F1, Confusion Matrices
 - Discussion: CNN vs Transfer Learning, class imbalance impact, trash class behavior
+
+---
+
+### DEMO — Web Application (Practical Deployment)
+
+Status: Completed
+
+A Flask web application was built to demonstrate the trained model in practice.
+This serves as the "Practical Application" section of the thesis.
+
+Stack:
+- Backend: Python Flask
+- Frontend: HTML/CSS/JavaScript (single page, no frameworks)
+- Model: EfficientNetB0 + Data Augmentation (best real-world performer)
+
+Features:
+- Drag & drop image upload (JPG, PNG, HEIC supported)
+- Real-time classification with confidence scores
+- Per-class confidence bar chart
+- Recycling tip per detected category
+- Displays model accuracy stats in the UI
+
+How to run:
+  cd waste-classification-master-thesis
+  FLASK_SKIP_DOTENV=1 python app.py
+  Open: http://127.0.0.1:5000
+
+Files:
+- app.py                  Flask backend, model loading, /predict endpoint
+- templates/index.html    Frontend interface
+
+Thesis relevance:
+This demo proves the system can be used in a real-world scenario.
+It demonstrates: image preprocessing pipeline, model inference, and result presentation.
+It strengthens the "Practical Implications" section of the thesis.

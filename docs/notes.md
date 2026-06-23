@@ -653,13 +653,144 @@ Artifacts:
 
 ---
 
+---
+
+## PROJECT SUMMARY — Complete Overview
+
+### All Experiments
+
+| ID      | Model                        | TrashNet Val | Real-World | Status    |
+|---------|------------------------------|-------------|------------|-----------|
+| EXP-001 | CNN Baseline (from scratch)  |    56.44%   |   11.54%   | Completed |
+| EXP-002 | MobileNetV2 (TL)             |    87.13%   |   43.59%   | Completed |
+| EXP-003 | EfficientNetB0 (TL)          |    89.90%   |   39.74%   | Completed |
+| EXP-004 | EfficientNetB0 + Augment     |    89.70%   |   50.00%   | Completed |
+| EXP-005 | EfficientNetB0 + TACO FT     |    TBD      |   TBD      | Pending   |
+
+### Key Findings So Far
+
+1. Transfer Learning vastly outperforms CNN from scratch:
+   EfficientNetB0 (89.90%) vs CNN Baseline (56.44%) = +33.46pp
+
+2. Data Augmentation reduces domain shift without hurting TrashNet accuracy:
+   EfficientNetB0 without aug: 39.74% real-world
+   EfficientNetB0 with aug:    50.00% real-world (+10.26pp)
+
+3. Domain Shift is the main limitation:
+   All models drop significantly on real-world photos.
+   Best model (EfficientNetB0) drops from 89.90% → 50.00% on real photos.
+   Root cause: TrashNet has white backgrounds; real photos have complex environments.
+
+4. Fine-Tuning Instability (MobileNetV2):
+   Using default lr (1e-3) for fine-tuning caused catastrophic forgetting.
+   Fixed with lr=1e-5 + ModelCheckpoint + EarlyStopping.
+
+### All Saved Models
+
+| Model                        | Path                                                        |
+|------------------------------|-------------------------------------------------------------|
+| CNN Baseline                 | results/cnn_baseline/cnn_baseline.keras                     |
+| MobileNetV2                  | results/mobilenet/mobilenet.keras                           |
+| EfficientNetB0               | results/efficientnet/efficientnet.keras                     |
+| EfficientNetB0 + Augment     | results/efficientnet_augmented/efficientnet_augmented.keras |
+
+### All Generated Artifacts
+
+Training curves (accuracy + loss plots):
+- results/cnn_baseline/accuracy.png, loss.png
+- results/mobilenet/accuracy.png, loss.png
+- results/efficientnet/accuracy.png, loss.png
+- results/efficientnet_augmented/accuracy.png, loss.png
+
+Confusion matrices:
+- results/cnn_baseline/confusion_matrix.png
+- results/mobilenet/confusion_matrix.png
+- results/efficientnet/confusion_matrix.png
+- results/efficientnet_augmented/confusion_matrix.png
+
+Classification reports (text):
+- results/cnn_baseline/classification_report.txt
+- results/mobilenet/classification_report.txt
+- results/efficientnet/classification_report.txt
+- results/efficientnet_augmented/classification_report.txt
+
+Real-world test results:
+- results/real_world_test/cnn_report.txt
+- results/real_world_test/mobilenet_report.txt
+- results/real_world_test/efficientnetb0_report.txt
+- results/real_world_test/efficientnetb0_augment_report.txt
+- results/real_world_test/accuracy_comparison.png
+
+Model comparison charts:
+- results/comparison/accuracy_f1_comparison.png
+- results/comparison/per_class_f1_comparison.png
+- results/comparison/val_loss_comparison.png
+
+### Git History (commits)
+
+- Add MobileNetV2 transfer learning implementation
+- Add EfficientNetB0 transfer learning implementation
+- Update experiment log with EXP-002/EXP-003 results
+- Add detailed evaluation scripts and per-class metrics for all models
+- Add model comparison plots (NEXT-02)
+- Add real-world evaluation script and results (NEXT-01)
+- Add EfficientNetB0 with data augmentation (EXP-004)
+- EXP-004: EfficientNetB0 + Data Augmentation — evaluation complete
+- Add Flask web demo for waste classification (Practical Deployment)
+
+---
+
 ### NEXT-03 — Thesis Write-Up
 Chapters that can now be written based on collected data:
 - Dataset and Preprocessing
-- Model Architectures
-- Training Configuration
-- Results: Accuracy, Loss, F1, Confusion Matrices
-- Discussion: CNN vs Transfer Learning, class imbalance impact, trash class behavior
+- Model Architectures (CNN, MobileNetV2, EfficientNetB0)
+- Training Configuration and Callbacks
+- Results: Accuracy, Loss, F1-Score, Confusion Matrices
+- Discussion: CNN vs Transfer Learning, Data Augmentation impact
+- Discussion: Domain Shift — TrashNet vs Real-World
+- Conclusion and Future Work (EXP-005 domain adaptation)
+
+---
+
+### EXP-005 — Domain Adaptation with TACO Dataset
+
+Status: Pending
+
+Motivation:
+All current models trained exclusively on TrashNet (white background, controlled images)
+perform poorly on real-world photos (best: 50.00%). The root cause is domain shift.
+Fine-tuning on TACO (real-world waste images) is expected to close this gap significantly.
+
+TACO Dataset:
+- Full name: Trash Annotations in Context
+- Source: https://github.com/pedropro/TACO
+- Kaggle: https://www.kaggle.com/datasets/kneroma/tacotrashdataset
+- License: CC BY 4.0
+- Description: Waste photos taken in real environments (roads, beaches, parks, homes)
+- Format: COCO annotation format (bounding boxes + segmentation)
+- Size: ~1,500+ labeled images
+
+Category Mapping (TACO → TrashNet classes):
+TACO has a hierarchical taxonomy. Mapping needed:
+- Aluminium foil, Bottle cap, Can → metal
+- Bottle (glass), Broken glass → glass
+- Carton, Cardboard → cardboard
+- Paper, Newspaper, Magazine → paper
+- Plastic bag, Bottle (plastic), Cup (plastic) → plastic
+- Other/mixed → trash
+
+Plan:
+1. Download TACO from Kaggle
+2. Parse COCO annotations and map categories to TrashNet's 6 classes
+3. Extract cropped object images per class
+4. Fine-tune EfficientNetB0+Augment with TACO images (80/20 split)
+5. Evaluate on original real_test_dataset (78 photos)
+6. Expected: 70-80% real-world accuracy
+
+Script to create:
+- src/data/prepare_taco.py    (parse COCO, crop objects, map categories)
+- src/training/train_taco_finetune.py  (fine-tune on TACO data)
+- src/evaluation/evaluate_taco.py      (evaluate on real_test_dataset)
 
 ---
 

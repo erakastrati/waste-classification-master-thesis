@@ -470,16 +470,76 @@ Artifacts:
 ## Remaining Work
 
 ### NEXT-01 — Real-World Testing
-Test all three saved models on data/real_test_dataset/ (images collected
-outside the TrashNet dataset). This validates generalization to real conditions.
 
-Required:
-- src/evaluation/evaluate_real_world.py
-- Predict with all 3 models on same real images
-- Compare predictions side-by-side
-- Document results in notes.md
+Status: Completed
 
-Status: Pending
+Dataset: 78 real-world photos taken with iPhone (13 per class)
+Classes: cardboard, glass, metal, paper, plastic, trash
+Format: JPEG (converted from HEIC via sips)
+
+---
+
+Results:
+
+| Model          | TrashNet Val | Real-World | Drop     |
+|----------------|-------------|------------|----------|
+| CNN Baseline   | 56.44%      | 11.54%     | -44.90pp |
+| MobileNetV2    | 87.13%      | 43.59%     | -43.54pp |
+| EfficientNetB0 | 89.90%      | 39.74%     | -50.16pp |
+
+---
+
+Per-Class F1 (Real-World):
+
+CNN Baseline:
+- cardboard: 0.15 | glass: 0.00 | metal: 0.10
+- paper: 0.16    | plastic: 0.00 | trash: 0.14
+- macro F1: 0.09
+
+MobileNetV2:
+- cardboard: 0.39 | glass: 0.27 | metal: 0.48
+- paper: 0.57    | plastic: 0.52 | trash: 0.13
+- macro F1: 0.39
+
+EfficientNetB0:
+- cardboard: 0.33 | glass: 0.42 | metal: 0.24
+- paper: 0.48    | plastic: 0.47 | trash: 0.25
+- macro F1: 0.36
+
+---
+
+Key Observations:
+
+- All three models suffered a severe drop in real-world conditions.
+  This is a classic domain shift problem: TrashNet uses white backgrounds,
+  controlled studio lighting, and centered objects. Real-world photos have
+  natural backgrounds, variable lighting, and arbitrary angles.
+
+- The CNN Baseline collapsed to 11.54% — near random (chance = 16.7% for 6 classes).
+  It learned visual patterns tightly coupled to the white background of TrashNet.
+
+- MobileNetV2 (43.59%) and EfficientNetB0 (39.74%) retained partial generalization.
+  Transfer learning from ImageNet provided some domain-agnostic features
+  (edges, textures, shapes), but not enough to overcome the domain gap.
+
+- paper was the best-performing class across all models in real-world conditions.
+  This is likely because paper has distinctive flat texture that is
+  background-independent.
+
+- trash and glass were the hardest classes in real-world conditions.
+
+- This result is a significant finding for the thesis: it demonstrates that
+  training exclusively on controlled dataset images (TrashNet) is insufficient
+  for real-world deployment without domain adaptation or data augmentation.
+
+Artifacts:
+- results/real_world_test/cnn_baseline_report.txt
+- results/real_world_test/cnn_baseline_confusion_matrix.png
+- results/real_world_test/mobilenetv2_report.txt
+- results/real_world_test/mobilenetv2_confusion_matrix.png
+- results/real_world_test/efficientnetb0_report.txt
+- results/real_world_test/efficientnetb0_confusion_matrix.png
+- results/real_world_test/accuracy_comparison.png
 
 ### NEXT-02 — Model Comparison Plots
 

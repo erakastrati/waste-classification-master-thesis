@@ -587,19 +587,69 @@ Training Strategy:
 Same as EXP-003: Phase 1 (lr=1e-3, frozen) + Phase 2 (lr=1e-5, top 30 layers)
 ModelCheckpoint + EarlyStopping (patience=5)
 
-Status:
-Pending — run: python -m src.training.train_efficientnet_augmented
+Status: Completed
 
-Results:
-To be completed after training.
+Training Results:
+Phase 1 (Classification Head, Frozen Base):
+- Best val_accuracy: 0.8970 (Epoch 5)
+- Best val_loss: 0.3104
+- EarlyStopping triggered at Epoch 10 (patience=5, best at Epoch 5)
 
-Comparison target:
-EfficientNetB0 without augmentation: 89.90% val accuracy
+Phase 2 (Fine-Tuning, Top 30 Layers, lr=1e-5):
+- val_accuracy did not improve above Phase 1 best (0.8970)
+- EarlyStopping triggered at Epoch 6 of Phase 2
 
-Artifacts (expected):
+Final Validation Results (TrashNet):
+- Validation Accuracy: 89.70%
+- Validation Loss:     0.3104
+- Macro F1-Score:      0.89
+
+Per-Class F1-Score:
+- cardboard: 0.94
+- glass:     0.89
+- metal:     0.90
+- paper:     0.93
+- plastic:   0.86
+- trash:     0.81
+
+TrashNet Comparison vs EXP-003 (no augmentation):
+- Accuracy: 89.70% vs 89.90% → -0.20pp (statistically negligible)
+- Loss:     0.3104 vs 0.3386 → lower loss (+0.0282)
+- Conclusion: Augmentation has no negative impact on TrashNet performance.
+
+Real-World Test Results (78 images, 6 classes):
+- Real-World Accuracy: 50.00%
+- TrashNet → Real-World gap: -39.70pp
+
+Real-World Comparison (with vs without augmentation):
+- EfficientNetB0 (no aug):  39.74% real-world
+- EfficientNetB0 (+ aug):   50.00% real-world
+- Improvement: +10.26pp on real-world data
+
+Key Observation:
+Data augmentation improved real-world generalization by +10.26pp while maintaining
+near-identical TrashNet validation performance (-0.20pp). This is the central
+finding for the augmentation section of the thesis: augmentation reduces domain
+shift without sacrificing controlled-environment accuracy.
+
+All 4-model real-world comparison summary:
+| Model                    | TrashNet Val | Real-World | Gap      |
+|--------------------------|-------------|------------|----------|
+| CNN Baseline             |    56.44%   |   11.54%   | -44.90pp |
+| MobileNetV2              |    87.13%   |   43.59%   | -43.54pp |
+| EfficientNetB0           |    89.90%   |   39.74%   | -50.16pp |
+| EfficientNetB0 + Augment |    89.70%   |   50.00%   | -39.70pp |
+
+Artifacts:
 - results/efficientnet_augmented/efficientnet_augmented.keras
+- results/efficientnet_augmented/efficientnet_augmented_best.keras
 - results/efficientnet_augmented/accuracy.png
 - results/efficientnet_augmented/loss.png
+- results/efficientnet_augmented/confusion_matrix.png
+- results/efficientnet_augmented/classification_report.txt
+- results/real_world_test/efficientnetb0_augment_report.txt
+- results/real_world_test/efficientnetb0_augment_confusion_matrix.png
+- results/real_world_test/accuracy_comparison.png (updated)
 
 ---
 

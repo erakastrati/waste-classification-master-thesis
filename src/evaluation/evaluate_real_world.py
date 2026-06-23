@@ -26,16 +26,20 @@ IMAGE_SIZE   = (224, 224)
 CLASS_NAMES  = ["cardboard", "glass", "metal", "paper", "plastic", "trash"]
 
 MODELS = {
-    "CNN Baseline":   {
+    "CNN Baseline":              {
         "path":       "results/cnn_baseline/cnn_baseline.keras",
         "preprocess": lambda x: x / 255.0,
     },
-    "MobileNetV2":    {
+    "MobileNetV2":               {
         "path":       "results/mobilenet/mobilenet.keras",
         "preprocess": mobilenet_preprocess,
     },
-    "EfficientNetB0": {
+    "EfficientNetB0":            {
         "path":       "results/efficientnet/efficientnet.keras",
+        "preprocess": efficientnet_preprocess,
+    },
+    "EfficientNetB0 + Augment": {
+        "path":       "results/efficientnet_augmented/efficientnet_augmented.keras",
         "preprocess": efficientnet_preprocess,
     },
 }
@@ -170,7 +174,12 @@ print("="*50)
 print(f"{'Model':<20} {'TrashNet Val':>14} {'Real-World':>12}")
 print("-"*50)
 
-trashnet_acc = {"CNN Baseline": 0.5644, "MobileNetV2": 0.8713, "EfficientNetB0": 0.8990}
+trashnet_acc = {
+    "CNN Baseline":              0.5644,
+    "MobileNetV2":               0.8713,
+    "EfficientNetB0":            0.8990,
+    "EfficientNetB0 + Augment": 0.8970,
+}
 
 for m in model_names:
     rw  = results_summary[m]["accuracy"]

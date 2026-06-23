@@ -3,6 +3,8 @@ __pycache__/
 .ipynb_checkpoints/
 .DS_Store
 data/
+!src/data/
+!src/data/*.py
 results/
 *.h5
 *.keras

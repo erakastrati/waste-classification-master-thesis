@@ -42,6 +42,10 @@ MODELS = {
         "path":       "results/efficientnet_augmented/efficientnet_augmented.keras",
         "preprocess": efficientnet_preprocess,
     },
+    "EfficientNetB0 + TACO":    {
+        "path":       "results/efficientnet_taco/efficientnet_taco.keras",
+        "preprocess": efficientnet_preprocess,
+    },
 }
 
 
@@ -179,6 +183,7 @@ trashnet_acc = {
     "MobileNetV2":               0.8713,
     "EfficientNetB0":            0.8990,
     "EfficientNetB0 + Augment": 0.8970,
+    "EfficientNetB0 + TACO":    0.9287,
 }
 
 for m in model_names:

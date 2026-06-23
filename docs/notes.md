@@ -665,7 +665,7 @@ Artifacts:
 | EXP-002 | MobileNetV2 (TL)             |    87.13%   |   43.59%   | Completed |
 | EXP-003 | EfficientNetB0 (TL)          |    89.90%   |   39.74%   | Completed |
 | EXP-004 | EfficientNetB0 + Augment     |    89.70%   |   50.00%   | Completed |
-| EXP-005 | EfficientNetB0 + TACO FT     |    TBD      |   TBD      | Pending   |
+| EXP-005 | EfficientNetB0 + TACO FT     |    92.87%   |   52.56%   | Completed |
 
 ### Key Findings So Far
 
@@ -754,43 +754,83 @@ Chapters that can now be written based on collected data:
 
 ### EXP-005 — Domain Adaptation with TACO Dataset
 
-Status: Pending
+Status: Completed
 
 Motivation:
-All current models trained exclusively on TrashNet (white background, controlled images)
-perform poorly on real-world photos (best: 50.00%). The root cause is domain shift.
-Fine-tuning on TACO (real-world waste images) is expected to close this gap significantly.
+All previous models trained on TrashNet (white background) performed poorly on real-world photos
+(best: 50.00%). Fine-tuning on TACO (in-the-wild waste images) was used to improve generalization.
 
 TACO Dataset:
 - Full name: Trash Annotations in Context
 - Source: https://github.com/pedropro/TACO
 - Kaggle: https://www.kaggle.com/datasets/kneroma/tacotrashdataset
 - License: CC BY 4.0
-- Description: Waste photos taken in real environments (roads, beaches, parks, homes)
-- Format: COCO annotation format (bounding boxes + segmentation)
-- Size: ~1,500+ labeled images
+- Description: 1,500 waste photos in real environments (roads, beaches, parks, homes)
+- Format: COCO annotation format with bounding box + segmentation annotations
+- Total annotations: 4,784 objects across 60 fine-grained categories
 
-Category Mapping (TACO → TrashNet classes):
-TACO has a hierarchical taxonomy. Mapping needed:
-- Aluminium foil, Bottle cap, Can → metal
-- Bottle (glass), Broken glass → glass
-- Carton, Cardboard → cardboard
-- Paper, Newspaper, Magazine → paper
-- Plastic bag, Bottle (plastic), Cup (plastic) → plastic
-- Other/mixed → trash
+Data Preparation (src/data/prepare_taco.py):
+- Parsed COCO annotations and mapped 60 TACO categories to 6 TrashNet classes
+- Cropped objects using bounding boxes (MIN_SIZE = 48px)
+- Saved 3,601 crops to data/taco-prepared/
 
-Plan:
-1. Download TACO from Kaggle
-2. Parse COCO annotations and map categories to TrashNet's 6 classes
-3. Extract cropped object images per class
-4. Fine-tune EfficientNetB0+Augment with TACO images (80/20 split)
-5. Evaluate on original real_test_dataset (78 photos)
-6. Expected: 70-80% real-world accuracy
+TACO crops per class:
+- cardboard:  266
+- glass:      163
+- metal:      461
+- paper:      207
+- plastic:  1,989  (overrepresented — handled with class_weight)
+- trash:      515
+- TOTAL:    3,601
 
-Script to create:
-- src/data/prepare_taco.py    (parse COCO, crop objects, map categories)
-- src/training/train_taco_finetune.py  (fine-tune on TACO data)
-- src/evaluation/evaluate_taco.py      (evaluate on real_test_dataset)
+Combined training dataset (TrashNet + TACO):
+- cardboard:  669  (403 + 266)
+- glass:      664  (501 + 163)
+- metal:      871  (410 + 461)
+- paper:      801  (594 + 207)
+- plastic:  2,471  (482 + 1,989)
+- trash:      652  (137 + 515)
+- TOTAL:    6,128  images
+
+Fine-Tuning Strategy (src/training/train_taco_finetune.py):
+- Base model: EfficientNetB0 + Augmentation (89.70% TrashNet, 50.00% real-world)
+- Only classification head trained (base frozen, 164,742 trainable params)
+- Optimizer: Adam(lr=1e-5)
+- Class weights to compensate plastic over-representation
+- EarlyStopping(patience=5), ModelCheckpoint(monitor=val_accuracy)
+- Training stopped at Epoch 8, best at Epoch 3
+
+Training Results:
+- Best val_accuracy: 0.9287 (Epoch 3)
+- Best val_loss:     0.2322
+
+Final Results vs Previous Best (EfficientNetB0 + Augment):
+- TrashNet val accuracy: 92.87% (was 89.70%) → +3.17pp  ← NEW RECORD
+- Real-world accuracy:   52.56% (was 50.00%) → +2.56pp
+
+Key Observation:
+TACO fine-tuning improved TrashNet accuracy significantly (+3.17pp) by providing more
+diverse training data across all classes. Real-world improvement was moderate (+2.56pp)
+because TACO bounding-box crops are object-centric (similar to TrashNet style), not
+full-scene photos like the real_test_dataset. Full-scene images would yield larger gains.
+
+Complete 5-model comparison:
+| Model                    | TrashNet Val | Real-World | Gap      |
+|--------------------------|-------------|------------|----------|
+| CNN Baseline             |    56.44%   |   11.54%   | -44.90pp |
+| MobileNetV2              |    87.13%   |   43.59%   | -43.54pp |
+| EfficientNetB0           |    89.90%   |   39.74%   | -50.16pp |
+| EfficientNetB0 + Augment |    89.70%   |   50.00%   | -39.70pp |
+| EfficientNetB0 + TACO    |    92.87%   |   52.56%   | -40.31pp |
+
+Artifacts:
+- data/taco-prepared/           (3,601 cropped objects organized by class)
+- results/efficientnet_taco/efficientnet_taco.keras
+- results/efficientnet_taco/efficientnet_taco_best.keras
+- results/efficientnet_taco/training_curves.png
+- results/real_world_test/efficientnetb0_taco_report.txt
+- results/real_world_test/efficientnetb0_taco_confusion_matrix.png
+- results/real_world_test/accuracy_comparison.png (updated with 5 models)
 
 ---
 

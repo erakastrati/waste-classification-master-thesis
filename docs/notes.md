@@ -563,6 +563,46 @@ Artifacts:
 - results/comparison/per_class_f1_comparison.png
 - results/comparison/val_loss_comparison.png
 
+### EXP-004 — EfficientNetB0 + Data Augmentation
+
+Model:
+EfficientNetB0 (Transfer Learning + Data Augmentation)
+
+Motivation:
+Project proposal explicitly requires comparison with/without data augmentation.
+Previous EfficientNetB0 (EXP-003) trained without augmentation.
+This experiment adds augmentation to address the domain gap observed in real-world testing.
+
+Augmentation Layers (applied during training only):
+- RandomFlip("horizontal")
+- RandomRotation(0.15) — ±15 degrees
+- RandomZoom(0.15) — ±15% zoom
+- RandomContrast(0.2) — ±20% contrast
+
+Architecture:
+Input → Augmentation → EfficientNetB0 base → GlobalAveragePooling2D
+→ Dense(128) → Dropout(0.3) → Dense(6, Softmax)
+
+Training Strategy:
+Same as EXP-003: Phase 1 (lr=1e-3, frozen) + Phase 2 (lr=1e-5, top 30 layers)
+ModelCheckpoint + EarlyStopping (patience=5)
+
+Status:
+Pending — run: python -m src.training.train_efficientnet_augmented
+
+Results:
+To be completed after training.
+
+Comparison target:
+EfficientNetB0 without augmentation: 89.90% val accuracy
+
+Artifacts (expected):
+- results/efficientnet_augmented/efficientnet_augmented.keras
+- results/efficientnet_augmented/accuracy.png
+- results/efficientnet_augmented/loss.png
+
+---
+
 ### NEXT-03 — Thesis Write-Up
 Chapters that can now be written based on collected data:
 - Dataset and Preprocessing

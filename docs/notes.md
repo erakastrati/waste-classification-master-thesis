@@ -667,6 +667,7 @@ Artifacts:
 | EXP-004 | EfficientNetB0 + Augment     |    89.70%   |   50.00%   | Completed |
 | EXP-005 | EfficientNetB0 + TACO FT     |    92.87%   |   52.56%   | Completed |
 | EXP-006 | EfficientNetB0 + rembg (PP)  |    N/A      |   50.00%   | Completed (negative result) |
+| EXP-007 | EfficientNetB0 + RealWaste   |    91.29%   |   55.13%   | Completed |
 
 ### Key Findings So Far
 
@@ -679,10 +680,14 @@ Artifacts:
 
 3. Domain Shift is the main limitation:
    All models drop significantly on real-world photos.
-   Best model (EfficientNetB0) drops from 89.90% → 50.00% on real photos.
-   Root cause: TrashNet has white backgrounds; real photos have complex environments.
+   Best TrashNet model: 92.87% → 52.56% real-world (TACO).
+   Best real-world model: 55.13% (RealWaste, EXP-007).
 
-4. Fine-Tuning Instability (MobileNetV2):
+4. Domain adaptation experiments show incremental gains:
+   No augmentation: 39.74% → + Augment: 50.00% → + TACO: 52.56% → + RealWaste: 55.13%
+   Each step adds real-world training data; gains diminish as domains differ.
+
+5. Fine-Tuning Instability (MobileNetV2):
    Using default lr (1e-3) for fine-tuning caused catastrophic forgetting.
    Fixed with lr=1e-5 + ModelCheckpoint + EarlyStopping.
 
@@ -877,6 +882,88 @@ The system uses direct inference without preprocessing pipeline.
 
 ---
 
+### EXP-007 — Domain Adaptation with RealWaste Dataset
+
+Status: Completed
+
+Motivation:
+Real-world accuracy remained low (~52.56% with TACO). RealWaste provides 3,905
+full-scene waste images from authentic landfill environments — closer to real-world
+conditions than TrashNet's white-background studio photos.
+
+Dataset:
+- Source: RealWaste (Kaggle: joebeachcapital/realwaste)
+- License: CC BY-NC-SA 4.0
+- Location: data/realwaste-dataset/
+- User removed Food Organics and Vegetation folders (not mapped to TrashNet classes)
+
+Data Preparation (src/data/prepare_realwaste.py):
+Mapped 7 RealWaste folders → 6 TrashNet classes:
+- Cardboard → cardboard (461)
+- Glass → glass (420)
+- Metal → metal (790)
+- Paper → paper (500)
+- Plastic → plastic (921)
+- Miscellaneous Trash + Textile Trash → trash (813)
+- TOTAL: 3,905 images → data/realwaste-prepared/
+
+Training Strategy (src/training/train_realwaste_finetune.py):
+- Base model: EfficientNetB0 + TACO (92.87% TrashNet, 52.56% real-world)
+- Combined training: TrashNet train (~2,022) + RealWaste (3,905) = ~5,927 images
+- Optimizer: Adam(lr=1e-5), class_weight for imbalance
+- EarlyStopping(patience=5), ModelCheckpoint(monitor=val_accuracy)
+- Validation: TrashNet val set only (505 images)
+- real_test_dataset (78 photos) held out — never used for training
+
+Training Results:
+- Best val_accuracy: 0.9129 (Epoch 1)
+- EarlyStopping at Epoch 6
+- val_loss: 0.2710
+
+Final Results vs Previous Best (EfficientNetB0 + TACO):
+- TrashNet val accuracy: 91.29% (was 92.87%) → -1.58pp
+- Real-world accuracy:   55.13% (was 52.56%) → +2.57pp  ← NEW BEST real-world
+
+Per-Class F1-Score (real-world, 78 images):
+- cardboard: 0.47
+- glass:     0.67
+- metal:     0.52
+- paper:     0.61
+- plastic:   0.59
+- trash:     0.31
+- Macro F1:  0.55
+
+Key Observation:
+RealWaste fine-tuning improved real-world accuracy by +2.57pp but did not reach
+the 65-75% target. Likely causes:
+1. RealWaste images are from landfill environments; user's test photos are from home
+2. Domain mismatch persists (wooden tables, mixed materials, iPhone photos)
+3. Only 78 real-world test images — small but held-out test set
+
+Real-world progression (all models):
+| Model                    | TrashNet Val | Real-World | Gap      |
+|--------------------------|-------------|------------|----------|
+| CNN Baseline             |    56.44%   |   11.54%   | -44.90pp |
+| MobileNetV2              |    87.13%   |   43.59%   | -43.54pp |
+| EfficientNetB0           |    89.90%   |   39.74%   | -50.16pp |
+| EfficientNetB0 + Augment |    89.70%   |   50.00%   | -39.70pp |
+| EfficientNetB0 + TACO    |    92.87%   |   52.56%   | -40.31pp |
+| EfficientNetB0 + RealWaste |  91.29%   |   55.13%   | -36.16pp |
+
+Final model selection:
+- Web demo: EfficientNetB0 + RealWaste (best real-world: 55.13%)
+- Thesis TrashNet results: EfficientNetB0 + TACO (best val: 92.87%)
+
+Artifacts:
+- data/realwaste-prepared/ (3,905 images, 6 classes)
+- results/efficientnet_realwaste/efficientnet_realwaste.keras
+- results/efficientnet_realwaste/efficientnet_realwaste_best.keras
+- results/efficientnet_realwaste/training_curves.png
+- src/data/prepare_realwaste.py
+- src/training/train_realwaste_finetune.py
+
+---
+
 ### DEMO — Web Application (Practical Deployment)
 
 Status: Completed
@@ -887,7 +974,7 @@ This serves as the "Practical Application" section of the thesis.
 Stack:
 - Backend: Python Flask
 - Frontend: HTML/CSS/JavaScript (single page, no frameworks)
-- Model: EfficientNetB0 + Data Augmentation (best real-world performer)
+- Model: EfficientNetB0 + RealWaste (best real-world performer: 55.13%)
 
 Features:
 - Drag & drop image upload (JPG, PNG, HEIC supported)

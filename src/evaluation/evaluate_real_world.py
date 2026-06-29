@@ -46,6 +46,10 @@ MODELS = {
         "path":       "results/efficientnet_taco/efficientnet_taco.keras",
         "preprocess": efficientnet_preprocess,
     },
+    "EfficientNetB0 + RealWaste": {
+        "path":       "results/efficientnet_realwaste/efficientnet_realwaste.keras",
+        "preprocess": efficientnet_preprocess,
+    },
 }
 
 
@@ -184,6 +188,7 @@ trashnet_acc = {
     "EfficientNetB0":            0.8990,
     "EfficientNetB0 + Augment": 0.8970,
     "EfficientNetB0 + TACO":    0.9287,
+    "EfficientNetB0 + RealWaste": 0.9129,
 }
 
 for m in model_names:

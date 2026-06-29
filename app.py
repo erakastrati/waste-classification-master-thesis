@@ -16,7 +16,7 @@ app = Flask(__name__)
 # Configuration
 # ==========================================
 
-MODEL_PATH  = "results/efficientnet_taco/efficientnet_taco.keras"
+MODEL_PATH  = "results/efficientnet_realwaste/efficientnet_realwaste.keras"
 IMAGE_SIZE  = (224, 224)
 CLASS_NAMES = ["cardboard", "glass", "metal", "paper", "plastic", "trash"]
 

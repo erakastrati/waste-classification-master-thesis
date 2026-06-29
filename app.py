@@ -16,7 +16,7 @@ app = Flask(__name__)
 # Configuration
 # ==========================================
 
-MODEL_PATH  = "results/efficientnet_augmented/efficientnet_augmented.keras"
+MODEL_PATH  = "results/efficientnet_taco/efficientnet_taco.keras"
 IMAGE_SIZE  = (224, 224)
 CLASS_NAMES = ["cardboard", "glass", "metal", "paper", "plastic", "trash"]
 
@@ -74,8 +74,7 @@ def predict():
 
         # Encode thumbnail for display
         buf = io.BytesIO()
-        img_resized_display = img.resize((300, 300))
-        img_resized_display.save(buf, format="JPEG", quality=85)
+        img.resize((300, 300)).save(buf, format="JPEG", quality=85)
         encoded_img = base64.b64encode(buf.getvalue()).decode("utf-8")
 
         return jsonify({

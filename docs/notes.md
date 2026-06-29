@@ -666,6 +666,7 @@ Artifacts:
 | EXP-003 | EfficientNetB0 (TL)          |    89.90%   |   39.74%   | Completed |
 | EXP-004 | EfficientNetB0 + Augment     |    89.70%   |   50.00%   | Completed |
 | EXP-005 | EfficientNetB0 + TACO FT     |    92.87%   |   52.56%   | Completed |
+| EXP-006 | EfficientNetB0 + rembg (PP)  |    N/A      |   50.00%   | Completed (negative result) |
 
 ### Key Findings So Far
 
@@ -831,6 +832,48 @@ Artifacts:
 - results/real_world_test/efficientnetb0_taco_report.txt
 - results/real_world_test/efficientnetb0_taco_confusion_matrix.png
 - results/real_world_test/accuracy_comparison.png (updated with 5 models)
+
+---
+
+### EXP-006 — Background Removal Preprocessing (rembg)
+
+Status: Completed — Negative Result
+
+Hypothesis:
+Removing the background before classification would help the model focus on the
+object material rather than the surrounding environment, improving real-world accuracy.
+
+Method:
+- Used rembg library (U2-Net model, 176MB) to remove background from each image
+- Replaced background with white (matching TrashNet's controlled environment)
+- Evaluated EfficientNetB0 + TACO model on real_test_dataset (78 images)
+
+Results:
+- Without background removal: 52.56%
+- With background removal:    50.00%
+- Delta: -2.56pp (background removal made results slightly worse)
+
+Analysis:
+The hypothesis was not confirmed. Possible reasons:
+1. rembg (U2-Net) is optimized for portraits, not irregular waste objects
+2. Transparent objects (glass, plastic) are difficult to segment correctly
+3. EfficientNetB0 + TACO already adapted to mixed backgrounds during fine-tuning
+4. rembg may incorrectly crop parts of the waste object itself
+
+Academic value:
+This negative result is still valuable for the thesis Discussion section.
+It shows that naive preprocessing does not always improve domain generalization.
+The finding suggests that better segmentation models (e.g., SAM — Segment Anything)
+or end-to-end learning approaches may be needed for real-world deployment.
+
+Artifacts:
+- results/rembg_eval/rembg_comparison.png
+- results/rembg_eval/confusion_matrices.png
+- src/evaluation/evaluate_rembg.py
+
+Decision:
+Background removal was removed from the web app (app.py).
+The system uses direct inference without preprocessing pipeline.
 
 ---
 

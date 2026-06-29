@@ -303,7 +303,7 @@
     <h1>WasteAI — Waste Classification System</h1>
     <p>Master's Thesis · Deep Learning & Computer Vision · EfficientNetB0</p>
   </div>
-  <span class="badge">EfficientNetB0 + Augmentation</span>
+  <span class="badge">EfficientNetB0 + TACO Fine-Tuned</span>
 </header>
 
 <main>
@@ -311,7 +311,7 @@
   <!-- Stats strip -->
   <div class="info-strip">
     <div class="info-item">
-      <div class="val">89.7%</div>
+      <div class="val">92.9%</div>
       <div class="lbl">TrashNet Validation Accuracy</div>
     </div>
     <div class="info-item">
@@ -358,6 +358,8 @@
       </div>
     </div>
 
+    <div id="confidence-warning" style="display:none; background:rgba(0,0,0,0.2); border-left:3px solid #f59e0b; border-radius:0 8px 8px 0; padding:12px 16px; font-size:0.88rem; margin-bottom:16px;"></div>
+
     <div class="tip-box">
       <strong>♻️ Recycling tip:</strong> <span id="tip-text"></span>
     </div>
@@ -369,7 +371,7 @@
 </main>
 
 <footer>
-  WasteAI · Master's Thesis · Waste Classification using Deep Learning · EfficientNetB0 Transfer Learning
+  WasteAI · Master's Thesis · Waste Classification using Deep Learning · EfficientNetB0 + TACO Domain Adaptation
 </footer>
 
 <script>
@@ -471,6 +473,22 @@
             <div class="bar-pct">${pct}%</div>
           </div>`;
       });
+
+      // Confidence threshold warning
+      const warningEl = document.getElementById("confidence-warning");
+      if (data.confidence < 50) {
+        warningEl.innerHTML = `❌ <strong>Very low confidence (${data.confidence}%)</strong> — the model is uncertain. Try cropping the image to focus only on the object, removing background distractions.`;
+        warningEl.style.display = "block";
+        warningEl.style.borderColor = "#ef4444";
+        warningEl.style.color = "#fca5a5";
+      } else if (data.confidence < 70) {
+        warningEl.innerHTML = `⚠️ <strong>Low confidence (${data.confidence}%)</strong> — result may be inaccurate. Try photographing the object against a plain background.`;
+        warningEl.style.display = "block";
+        warningEl.style.borderColor = "#f59e0b";
+        warningEl.style.color = "#fcd34d";
+      } else {
+        warningEl.style.display = "none";
+      }
 
       resultCard.classList.add("visible");
 

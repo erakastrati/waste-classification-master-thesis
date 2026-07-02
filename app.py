@@ -8,7 +8,7 @@ os.environ.setdefault("FLASK_SKIP_DOTENV", "1")
 from flask import Flask, request, jsonify, render_template
 from PIL import Image
 from tensorflow.keras.models import load_model
-from tensorflow.keras.applications.efficientnet import preprocess_input
+from src.inference.tta_predict import predict_with_tta
 
 app = Flask(__name__)
 
@@ -16,7 +16,7 @@ app = Flask(__name__)
 # Configuration
 # ==========================================
 
-MODEL_PATH  = "results/efficientnet_realwaste/efficientnet_realwaste.keras"
+MODEL_PATH = "results/efficientnet_household/efficientnet_household.keras"
 IMAGE_SIZE  = (224, 224)
 CLASS_NAMES = ["cardboard", "glass", "metal", "paper", "plastic", "trash"]
 
@@ -29,7 +29,6 @@ CLASS_INFO = {
     "trash":     {"icon": "🗑️", "color": "#95A5A6", "tip": "This item cannot be recycled. Dispose in general waste."},
 }
 
-# Load model once at startup
 print("Loading model...")
 model = load_model(MODEL_PATH)
 print("Model loaded.")
@@ -56,13 +55,8 @@ def predict():
 
     try:
         img = Image.open(file.stream).convert("RGB")
-        img_resized = img.resize(IMAGE_SIZE)
 
-        img_array = np.array(img_resized, dtype=np.float32)
-        img_array = np.expand_dims(img_array, axis=0)
-        img_array = preprocess_input(img_array)
-
-        predictions = model.predict(img_array, verbose=0)[0]
+        predictions = predict_with_tta(model, img, IMAGE_SIZE)
         confidence_scores = {
             CLASS_NAMES[i]: round(float(predictions[i]) * 100, 2)
             for i in range(len(CLASS_NAMES))

@@ -668,6 +668,9 @@ Artifacts:
 | EXP-005 | EfficientNetB0 + TACO FT     |    92.87%   |   52.56%   | Completed |
 | EXP-006 | EfficientNetB0 + rembg (PP)  |    N/A      |   50.00%   | Completed (negative result) |
 | EXP-007 | EfficientNetB0 + RealWaste   |    91.29%   |   55.13%   | Completed |
+| EXP-008 | EfficientNetB0 + Household   |    90.50%   |   57.69%   | Completed |
+| EXP-009 | + Test-Time Augmentation   |    90.50%   |   62.82%   | Completed |
+| EXP-010 | Ensemble (3 models + TTA)  |    90.50%   |   58.97%   | Completed (negative result) |
 
 ### Key Findings So Far
 
@@ -681,10 +684,10 @@ Artifacts:
 3. Domain Shift is the main limitation:
    All models drop significantly on real-world photos.
    Best TrashNet model: 92.87% → 52.56% real-world (TACO).
-   Best real-world model: 55.13% (RealWaste, EXP-007).
+   Best real-world model: 62.82% (Household + TTA, EXP-009).
 
 4. Domain adaptation experiments show incremental gains:
-   No augmentation: 39.74% → + Augment: 50.00% → + TACO: 52.56% → + RealWaste: 55.13%
+   No augmentation: 39.74% → + Augment: 50.00% → + TACO: 52.56% → + RealWaste: 55.13% → + Household: 57.69% → + TTA: 62.82%
    Each step adds real-world training data; gains diminish as domains differ.
 
 5. Fine-Tuning Instability (MobileNetV2):
@@ -964,6 +967,115 @@ Artifacts:
 
 ---
 
+### EXP-008 — Object-Centric Domain Adaptation with Household Waste
+
+Status: Completed
+
+Motivation:
+RealWaste (EXP-007) used full-scene landfill photos — model still learned background
+features (wood → cardboard). Household Waste dataset provides 7,500 home/kitchen
+real_world images mapped to 6 TrashNet classes. Combined with TACO object crops
+(object-focused) to reduce background dependency.
+
+Dataset:
+- Source: Recyclable and Household Waste Classification (Kaggle: alistairking)
+- Location: data/household-waste/images/<category>/real_world/
+- Preparation: src/data/prepare_household.py → data/local_train/ (7,500 images)
+
+Training Strategy (src/training/train_object_centric.py):
+- Base model: EfficientNetB0 + RealWaste (55.13% real-world)
+- Combined: TrashNet train (~2,022) + TACO crops (3,601) + Household (7,500) = ~13,123
+- Skipped RealWaste full-scene (background-heavy)
+- Optimizer: Adam(lr=1e-5), class_weight, EarlyStopping(patience=5)
+- Best checkpoint: Epoch 1 (val_accuracy=0.9050)
+
+Results vs EXP-007 (RealWaste):
+- TrashNet val accuracy: 90.50% (was 91.29%) → -0.79pp
+- Real-world accuracy:   57.69% (was 55.13%) → +2.56pp  ← NEW BEST
+
+Per-Class F1-Score (real-world, 78 images):
+- cardboard: 0.48
+- glass:     0.67
+- metal:     0.50
+- paper:     0.71
+- plastic:   0.59
+- trash:     0.50
+- Macro F1:  0.58
+
+Artifacts:
+- data/local_train/ (7,500 images, 6 classes)
+- results/efficientnet_household/efficientnet_household.keras
+- results/efficientnet_household/efficientnet_household_best.keras
+- results/efficientnet_household/training_curves.png
+- src/data/prepare_household.py
+- src/training/train_object_centric.py
+
+---
+
+### EXP-009 — Test-Time Augmentation (TTA)
+
+Status: Completed
+
+Motivation:
+Real-world accuracy plateaued at 57.69% (EXP-008). Many errors had low confidence,
+suggesting predictions were sensitive to framing and background. TTA averages
+predictions over multiple views at inference time — no retraining required.
+
+Method (src/inference/tta_predict.py):
+- 5 views per image: original, horizontal flip, center crop 85%, center crop 70%,
+  flipped center crop 85%
+- Average softmax outputs across views
+- Applied in app.py and evaluated on real_test_dataset
+
+Results (78 photos, Household model):
+| Method       | Real-World | Macro F1 |
+|--------------|------------|----------|
+| Single pass  |   57.69%   |   0.58   |
+| TTA          |   62.82%   |   0.63   |
+| Delta        |  +5.13pp   |  +0.05   |
+
+TTA changed 5 predictions: 4 fixed, 0 broken.
+
+Artifacts:
+- src/inference/tta_predict.py
+- src/evaluation/evaluate_tta.py
+- results/tta_eval/accuracy_comparison.png
+- results/tta_eval/single_pass_confusion_matrix.png
+- results/tta_eval/tta_confusion_matrix.png
+
+---
+
+### EXP-010 — Model Ensemble (Negative Result)
+
+Status: Completed — Negative Result
+
+Hypothesis:
+Averaging predictions from Household, TACO, and RealWaste models (each with TTA)
+would combine complementary strengths and improve real-world accuracy.
+
+Method (src/inference/ensemble_predict.py):
+- Equal-weight average of softmax outputs from 3 fine-tuned models + TTA each
+
+Results (78 photos):
+| Method           | Real-World |
+|------------------|------------|
+| Household + TTA  |   62.82%   |
+| Ensemble + TTA   |   58.97%   |
+| Delta            |   -3.85pp  |
+
+Fixed: 0 | Broken: 3
+
+Conclusion:
+TACO and RealWaste models perform worse on the local test set; averaging dragged
+down the stronger Household model. Single best model + TTA is preferred over ensemble.
+
+Artifacts:
+- src/inference/ensemble_predict.py
+- src/evaluation/evaluate_ensemble.py
+- results/ensemble_eval/
+
+---
+
 ### DEMO — Web Application (Practical Deployment)
 
 Status: Completed
@@ -974,7 +1086,7 @@ This serves as the "Practical Application" section of the thesis.
 Stack:
 - Backend: Python Flask
 - Frontend: HTML/CSS/JavaScript (single page, no frameworks)
-- Model: EfficientNetB0 + RealWaste (best real-world performer: 55.13%)
+- Model: EfficientNetB0 + Household + TTA (best real-world performer: 62.82%)
 
 Features:
 - Drag & drop image upload (JPG, PNG, HEIC supported)

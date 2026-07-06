@@ -16,7 +16,7 @@ app = Flask(__name__)
 # Configuration
 # ==========================================
 
-MODEL_PATH = "results/efficientnet_household/efficientnet_household.keras"
+MODEL_PATH = "results/efficientnet_garbage/efficientnet_garbage_best.keras"
 IMAGE_SIZE  = (224, 224)
 CLASS_NAMES = ["cardboard", "glass", "metal", "paper", "plastic", "trash"]
 

@@ -16,6 +16,8 @@ Run from project root:
 import os
 import shutil
 
+from PIL import Image
+
 SOURCE_ROOT = "data/garbage-v2"
 OUTPUT_ROOT = "data/garbage-v2-prepared"
 
@@ -38,17 +40,24 @@ IMAGE_EXTS = (".jpg", ".jpeg", ".png", ".webp", ".bmp")
 
 
 def find_class_root():
-    """Locate folder containing class subdirectories."""
-    candidates = [SOURCE_ROOT]
-    for root, dirs, files in os.walk(SOURCE_ROOT):
+    """Locate folder containing class subdirectories (prefer original images)."""
+    preferred = [
+        os.path.join(SOURCE_ROOT, "original"),
+        os.path.join(SOURCE_ROOT, "garbage-dataset"),
+        SOURCE_ROOT,
+    ]
+    for path in preferred:
+        if not os.path.isdir(path):
+            continue
+        dir_names = {d.lower() for d in os.listdir(path)}
+        if {"cardboard", "glass", "plastic"}.issubset(dir_names):
+            return path
+
+    for root, dirs, _ in os.walk(SOURCE_ROOT):
         dir_names = {d.lower() for d in dirs}
-        if "cardboard" in dir_names and "glass" in dir_names and "plastic" in dir_names:
-            candidates.append(root)
-    # Prefer deepest match (usually garbage-dataset/)
-    candidates = [c for c in candidates if os.path.isdir(c)]
-    if not candidates:
-        return None
-    return max(candidates, key=lambda p: p.count(os.sep))
+        if {"cardboard", "glass", "plastic"}.issubset(dir_names):
+            return root
+    return None
 
 
 def main():
@@ -63,7 +72,11 @@ def main():
     print(f"Found class root: {class_root}")
     print(f"Output: {OUTPUT_ROOT}\n")
 
+    if os.path.isdir(OUTPUT_ROOT):
+        shutil.rmtree(OUTPUT_ROOT)
+
     counters = {cls: 0 for cls in TRASHNET_CLASSES}
+    skipped = 0
     for cls in TRASHNET_CLASSES:
         os.makedirs(os.path.join(OUTPUT_ROOT, cls), exist_ok=True)
 
@@ -83,10 +96,14 @@ def main():
                 continue
             src_path = os.path.join(src_dir, fname)
             count = counters[dst_class]
-            ext = os.path.splitext(fname)[1].lower()
-            dst_name = f"garbage_{src_key}_{count:04d}{ext}"
+            dst_name = f"garbage_{src_key}_{count:04d}.jpg"
             dst_path = os.path.join(OUTPUT_ROOT, dst_class, dst_name)
-            shutil.copy2(src_path, dst_path)
+            try:
+                img = Image.open(src_path).convert("RGB")
+                img.save(dst_path, "JPEG", quality=95)
+            except Exception:
+                skipped += 1
+                continue
             counters[dst_class] += 1
             copied += 1
 
@@ -100,6 +117,8 @@ def main():
         print(f"  {cls:12s}  {counters[cls]:4d} images")
         total += counters[cls]
     print(f"  {'TOTAL':12s}  {total:4d} images")
+    if skipped:
+        print(f"  Skipped (unreadable): {skipped}")
 
 
 if __name__ == "__main__":

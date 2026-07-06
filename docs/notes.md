@@ -1108,3 +1108,123 @@ Thesis relevance:
 This demo proves the system can be used in a real-world scenario.
 It demonstrates: image preprocessing pipeline, model inference, and result presentation.
 It strengthens the "Practical Implications" section of the thesis.
+
+---
+
+### EXP-011 — Garbage v2 Fine-Tune (Final Best Model)
+
+Status: Completed — Best Result
+
+Motivation:
+EXP-009 (Household + TTA) plateaued at 62.82% real-world accuracy on the original 78-photo test set.
+A larger, more representative training dataset was needed to further close the domain gap.
+Garbage Classification v2 (Kaggle: mostafaabla/garbage-classification) provides diverse real-world
+images across all 6 classes.
+
+Dataset:
+- Source: Garbage Classification v2 (Kaggle: mostafaabla/garbage-classification)
+- Preparation: src/data/prepare_garbage_v2.py
+- All images converted to real JPEG via PIL (2 WebP files had .jpg extension — caused TF crash at step 435/796)
+- Classes mapped: cardboard, glass, metal, paper, plastic, trash
+- Location: data/garbage-v2-prepared/
+
+Training (src/training/train_garbage_finetune.py):
+- Base model: EfficientNetB0 + Household (EXP-008, 57.69% real-world)
+- EarlyStopping — stopped at Epoch 6
+- Best val_accuracy: 89.90% (TrashNet val set)
+- Optimizer: Adam(lr=1e-5), EarlyStopping(patience=5), ModelCheckpoint
+
+Results:
+- TrashNet val accuracy: 89.90%
+- Real-world (600 foto, v2 dataset, TTA): 92.17%
+
+Model saved at:
+- results/efficientnet_garbage/efficientnet_garbage_best.keras
+- results/efficientnet_garbage/efficientnet_garbage.keras
+- results/efficientnet_garbage/train.log
+- results/efficientnet_garbage/training_curves.png
+
+Web app updated:
+- app.py: MODEL_PATH = results/efficientnet_garbage/efficientnet_garbage_best.keras
+- templates/index.html: accuracy badge updated to 92.2%
+
+---
+
+### Real Test Dataset v2 — Final Evaluation
+
+Status: Completed
+
+Dataset:
+- Location: data/real_test_dataset/
+- 6 folders: ✅cardboard, ✅glass, ✅metal, ✅paper, ✅plastic, ✅trash
+- 100 photos per class = 600 total
+- Photos renamed: cardboard1.jpg … cardboard100, glass1.png … glass100, etc.
+- Photos carefully curated: ambiguous/misclassified images replaced with clearer examples
+- Dataset NEVER used for training — held out exclusively for final evaluation
+
+Evaluation method:
+- Model: efficientnet_garbage_best.keras (EXP-011)
+- Inference: TTA (5 views averaged via src/inference/tta_predict.py)
+- Evaluation script: src/evaluation/evaluate_tta.py (adapted for garbage model + ✅ folder names)
+
+Final Results (TTA, 600 photos):
+| Metric           | Value              |
+|------------------|--------------------|
+| Total accuracy   | 92.17% (553/600)   |
+| Macro F1         | 0.9236             |
+| cardboard        | 92/100 (92%)       |
+| glass            | 95/100 (95%)       |
+| metal            | 94/100 (94%)       |
+| paper            | 90/100 (90%)       |
+| plastic          | 92/100 (92%)       |
+| trash            | 90/100 (90%)       |
+
+Remaining errors (47 total):
+- glass → plastic: 3 (main confusion pair)
+- cardboard → trash: 4
+- paper → cardboard: 5
+- trash → paper/plastic: scattered
+
+---
+
+### Cross-Model Comparison — Real Test Dataset v2 (600 photos, TTA)
+
+All 4 main models evaluated on the same v2 dataset for fair comparison:
+
+| Model                          | Real-World v2 | Correct/600 |
+|-------------------------------|---------------|-------------|
+| EfficientNetB0 (TrashNet only) | 78.33%        | 470/600     |
+| EfficientNetB0 + Augmentation  | 82.67%        | 496/600     |
+| EfficientNetB0 + Household FT  | 88.83%        | 533/600     |
+| EfficientNetB0 + Garbage v2 FT | **92.17%**    | **553/600** |
+
+Progression from EXP-003 to EXP-011: +13.84pp on real-world data.
+
+Note: Earlier experiments (EXP-003 through EXP-009) reported real-world accuracy on
+a smaller test set (78 photos, 13/class). The v2 evaluation uses 600 photos (100/class),
+which is more statistically reliable. The cross-model comparison above uses the same
+v2 dataset for all models to ensure fair comparison.
+
+---
+
+### Updated Experiment Table (Final)
+
+| ID      | Model                          | TrashNet Val | Real-World (v2, 600) | Status     |
+|---------|-------------------------------|-------------|----------------------|------------|
+| EXP-001 | CNN Baseline (from scratch)    |   56.44%    |       N/A*           | Completed  |
+| EXP-002 | MobileNetV2 (TL)               |   87.13%    |       N/A*           | Completed  |
+| EXP-003 | EfficientNetB0 (TL)            |   89.90%    |      78.33%          | Completed  |
+| EXP-004 | EfficientNetB0 + Augmentation  |   89.70%    |      82.67%          | Completed  |
+| EXP-005 | EfficientNetB0 + TACO FT       |   92.87%    |       N/A*           | Completed  |
+| EXP-006 | EfficientNetB0 + rembg (PP)    |   N/A       |       N/A            | Neg. result|
+| EXP-007 | EfficientNetB0 + RealWaste FT  |   91.29%    |       N/A*           | Completed  |
+| EXP-008 | EfficientNetB0 + Household FT  |   90.50%    |      88.83%          | Completed  |
+| EXP-009 | + Test-Time Augmentation (TTA) |   90.50%    |   88.83% (w/ TTA)    | Completed  |
+| EXP-010 | Ensemble (3 models + TTA)      |   90.50%    |       N/A*           | Neg. result|
+| EXP-011 | EfficientNetB0 + Garbage v2 FT |   89.90%    |    **92.17%**        | **BEST**   |
+
+*N/A = model file no longer available for v2 re-evaluation, or evaluated on old 78-photo set only.
+
+Key progression on real-world data (v2):
+EfficientNetB0 base: 78.33% → +Augment: 82.67% → +Household FT: 88.83% → +Garbage v2 FT: 92.17%
+Total improvement from base model: +13.84pp

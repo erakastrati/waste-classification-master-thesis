@@ -1,0 +1,596 @@
+<!DOCTYPE html>
+<html lang="sq">
+<head>
+<meta charset="UTF-8">
+<style>
+  body { font-family: Arial, sans-serif; max-width: 900px; margin: 40px auto; color: #222; line-height: 1.6; padding: 0 30px; }
+  h1 { color: #1a1a2e; border-bottom: 3px solid #1a1a2e; padding-bottom: 10px; font-size: 1.8em; }
+  h2 { color: #16213e; border-bottom: 1px solid #ccc; padding-bottom: 6px; margin-top: 40px; font-size: 1.3em; }
+  h3 { color: #0f3460; margin-top: 24px; font-size: 1.1em; }
+  table { border-collapse: collapse; width: 100%; margin: 16px 0; font-size: 0.92em; }
+  th { background: #1a1a2e; color: white; padding: 8px 12px; text-align: left; }
+  td { border: 1px solid #ddd; padding: 7px 12px; }
+  tr:nth-child(even) { background: #f5f5f5; }
+  code { background: #f0f0f0; padding: 2px 6px; border-radius: 3px; font-size: 0.9em; }
+  pre { background: #f0f0f0; padding: 14px; border-radius: 6px; overflow-x: auto; font-size: 0.85em; border-left: 4px solid #1a1a2e; }
+  blockquote { border-left: 4px solid #0f3460; margin: 0; padding-left: 16px; color: #555; }
+  hr { border: none; border-top: 1px solid #ddd; margin: 30px 0; }
+  .header-info { background: #f8f8f8; border: 1px solid #ddd; border-radius: 6px; padding: 16px; margin: 20px 0; }
+</style>
+</head>
+<body>
+<h1>Raport Progresi — Tema e Masterit</h1>
+<h2>Klasifikimi i Mbeturinave përmes Imazheve duke përdorur CNN</h2>
+<hr />
+<p><strong>Studenti:</strong> Era Kastrati<br />
+<strong>Mentori:</strong> Bertan Karahoda<br />
+<strong>Data:</strong> Korrik 2026<br />
+<strong>Statusi:</strong> Faza eksperimentale e përfunduar — gati për dokumentim</p>
+<hr />
+<h2>1. Përmbledhje</h2>
+<p>Ky raport përshkruan punën e realizuar deri tani në kuadër të temës së masterit mbi klasifikimin automatik të mbeturinave duke përdorur rrjete nervore konvolucionale (CNN). Janë realizuar <strong>11 eksperimente</strong> sistemike, duke filluar nga një CNN e ndërtuar nga zero deri te fine-tuning i avancuar i modeleve të pre-trajnuara. Rezultati final arrin <strong>92.17% saktësi</strong> mbi një dataset real me 600 foto të mbledhura nga ambienti i përditshëm.</p>
+<hr />
+<h2>2. Dataset-et e Përdorura</h2>
+<h3>2.1 Dataset trajnimit (TrashNet — bazë)</h3>
+<table>
+<thead>
+<tr>
+<th>Parametri</th>
+<th>Vlera</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Burimi</td>
+<td>TrashNet (Kaggle)</td>
+</tr>
+<tr>
+<td>Klasa</td>
+<td>6: cardboard, glass, metal, paper, plastic, trash</td>
+</tr>
+<tr>
+<td>Imazhe totale</td>
+<td>2,527</td>
+</tr>
+<tr>
+<td>Ndarja</td>
+<td>80% trajnim (2,022) / 20% validim (505)</td>
+</tr>
+<tr>
+<td>Dimensionet</td>
+<td>512×384 px (risize në 224×224)</td>
+</tr>
+<tr>
+<td>Karakteristikë</td>
+<td>Imazhe në kushte të kontrolluara, sfond i bardhë</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Shpërndarja e klasave (TrashNet):</strong></p>
+<table>
+<thead>
+<tr>
+<th>Klasa</th>
+<th>Imazhe</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>cardboard</td>
+<td>403</td>
+</tr>
+<tr>
+<td>glass</td>
+<td>501</td>
+</tr>
+<tr>
+<td>metal</td>
+<td>410</td>
+</tr>
+<tr>
+<td>paper</td>
+<td>594</td>
+</tr>
+<tr>
+<td>plastic</td>
+<td>482</td>
+</tr>
+<tr>
+<td>trash</td>
+<td>137 ← e pabalancuar</td>
+</tr>
+<tr>
+<td><strong>TOTAL</strong></td>
+<td><strong>2,527</strong></td>
+</tr>
+</tbody>
+</table>
+<h3>2.2 Dataset-et shtesë (fine-tuning)</h3>
+<table>
+<thead>
+<tr>
+<th>Dataset</th>
+<th>Imazhe</th>
+<th>Qëllimi</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>TACO (Trash Annotations in Context)</td>
+<td>3,601 crops</td>
+<td>Imazhe reale me objekte të izoliara</td>
+</tr>
+<tr>
+<td>RealWaste</td>
+<td>3,905</td>
+<td>Imazhe nga ambienti i deponisë</td>
+</tr>
+<tr>
+<td>Household Waste</td>
+<td>7,500</td>
+<td>Imazhe shtëpiake, objekte të zakonshme</td>
+</tr>
+<tr>
+<td>Garbage Classification v2</td>
+<td>~17,000</td>
+<td>Dataset i larmishëm real-world</td>
+</tr>
+</tbody>
+</table>
+<h3>2.3 Real Test Dataset (i mbajtur jashtë trajnimit)</h3>
+<table>
+<thead>
+<tr>
+<th>Parametri</th>
+<th>Vlera</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Qëllimi</td>
+<td>Testim final — <strong>kurrë i përdorur për trajnim</strong></td>
+</tr>
+<tr>
+<td>Imazhe totale</td>
+<td><strong>600</strong></td>
+</tr>
+<tr>
+<td>Imazhe për klasë</td>
+<td><strong>100 (të balancuara)</strong></td>
+</tr>
+<tr>
+<td>Mbledhja</td>
+<td>Foto reale + burime interneti, kushte jo të kontrolluara</td>
+</tr>
+<tr>
+<td>Karakteristikë</td>
+<td>Sfonde të ndryshme, ndriçim variues, kënde të ndryshme</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2>3. Arkitektura dhe Qasja</h2>
+<h3>3.1 CNN bazike (nga zero)</h3>
+<p>Ndërtuar me shtresa konvolucionale, MaxPooling dhe Dense — pa pesha të pre-trajnuara. Shërbeu si <em>baseline</em> për krahasim.</p>
+<h3>3.2 Transfer Learning</h3>
+<p>Janë përdorur dy arkitektura:
+- <strong>MobileNetV2</strong> — model i lehtë, i shpejtë
+- <strong>EfficientNetB0</strong> — balancë optimale mes saktësisë dhe kompleksitetit</p>
+<p><strong>Strategjia e trajnimit:</strong>
+1. <em>Feature Extraction</em> — shtresat bazë të ngrira, trajnohen vetëm shtresat e fundit
+2. <em>Fine-Tuning</em> — zhbllokimi i shtresave të sipërme me <code>lr=1e-5</code> (learning rate i ulët për të shmangur harrimin katastrofik)
+3. <em>Callbacks</em>: EarlyStopping(patience=5), ModelCheckpoint(monitor=val_accuracy)</p>
+<h3>3.3 Data Augmentation</h3>
+<p>Aplikuar gjatë trajnimit:
+- Kthim horizontal (flip)
+- Rrotullim ±20°
+- Zoom ±15%
+- Ndryshim ndriçimi</p>
+<h3>3.4 Test-Time Augmentation (TTA)</h3>
+<p>Gjatë inferimit, çdo imazh paraqitet nga <strong>5 pamje të ndryshme</strong> dhe probabilitetet mësohen duke i mesatarizuar — kjo redukton ndjeshmërinë ndaj kornizimit dhe sfondit.</p>
+<hr />
+<h2>4. Eksperimentet (EXP-001 deri EXP-011)</h2>
+<h3>4.1 Tabela përmbledhëse e eksperimenteve</h3>
+<table>
+<thead>
+<tr>
+<th>ID</th>
+<th>Modeli</th>
+<th>Val TrashNet</th>
+<th>Real-World (v2)</th>
+<th>Shënim</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>EXP-001</td>
+<td>CNN Baseline (nga zero)</td>
+<td>56.44%</td>
+<td>—</td>
+<td>Baseline</td>
+</tr>
+<tr>
+<td>EXP-002</td>
+<td>MobileNetV2 Transfer Learning</td>
+<td>87.13%</td>
+<td>—</td>
+<td>+30.69pp vs CNN</td>
+</tr>
+<tr>
+<td>EXP-003</td>
+<td>EfficientNetB0 Transfer Learning</td>
+<td>89.90%</td>
+<td>78.33%</td>
+<td>+2.77pp vs MobileNet</td>
+</tr>
+<tr>
+<td>EXP-004</td>
+<td>EfficientNetB0 + Augmentation</td>
+<td>89.70%</td>
+<td>82.67%</td>
+<td>+4.34pp real-world</td>
+</tr>
+<tr>
+<td>EXP-005</td>
+<td>+ Fine-tune TACO</td>
+<td>92.87%</td>
+<td>—</td>
+<td>Rekord TrashNet</td>
+</tr>
+<tr>
+<td>EXP-006</td>
+<td>+ Background Removal (rembg)</td>
+<td>—</td>
+<td>—</td>
+<td><strong>Rezultat negativ</strong> −2.56pp</td>
+</tr>
+<tr>
+<td>EXP-007</td>
+<td>+ Fine-tune RealWaste</td>
+<td>91.29%</td>
+<td>—</td>
+<td>+2.57pp real-world</td>
+</tr>
+<tr>
+<td>EXP-008</td>
+<td>+ Fine-tune Household</td>
+<td>90.50%</td>
+<td>88.83%</td>
+<td>+10.50pp vs bazë</td>
+</tr>
+<tr>
+<td>EXP-009</td>
+<td>+ TTA</td>
+<td>90.50%</td>
+<td>88.83% (TTA)</td>
+<td>+5pp pa ritrainim</td>
+</tr>
+<tr>
+<td>EXP-010</td>
+<td>Ensemble 3 modele + TTA</td>
+<td>—</td>
+<td>—</td>
+<td><strong>Rezultat negativ</strong> −3.85pp</td>
+</tr>
+<tr>
+<td><strong>EXP-011</strong></td>
+<td><strong>+ Fine-tune Garbage v2</strong></td>
+<td><strong>89.90%</strong></td>
+<td><strong>92.17%</strong></td>
+<td><strong>BEST</strong></td>
+</tr>
+</tbody>
+</table>
+<h3>4.2 Progresi real-world (dataset v2, TTA)</h3>
+<pre><code>EfficientNetB0 (bazë):     78.33%
++ Augmentation:            82.67%  (+4.34pp)
++ Household Fine-tune:     88.83%  (+6.16pp)
++ Garbage v2 Fine-tune:    92.17%  (+3.34pp)
+─────────────────────────────────────
+Totali:                   +13.84pp
+</code></pre>
+<hr />
+<h2>5. Rezultati Final</h2>
+<h3>5.1 Saktësia totale</h3>
+<table>
+<thead>
+<tr>
+<th>Metrika</th>
+<th>Vlera</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Saktësia totale (TTA)</strong></td>
+<td><strong>92.17% (553/600)</strong></td>
+</tr>
+<tr>
+<td>Single-pass (pa TTA)</td>
+<td>~91%</td>
+</tr>
+<tr>
+<td>Macro F1-score</td>
+<td>0.9236</td>
+</tr>
+<tr>
+<td>Dataset testimi</td>
+<td>600 foto reale, 100/klasë</td>
+</tr>
+</tbody>
+</table>
+<h3>5.2 Saktësia për klasë</h3>
+<table>
+<thead>
+<tr>
+<th>Klasa</th>
+<th>Saktë</th>
+<th>Gabim</th>
+<th>%</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>cardboard</td>
+<td>92</td>
+<td>8</td>
+<td>92%</td>
+</tr>
+<tr>
+<td>glass</td>
+<td>95</td>
+<td>5</td>
+<td>95%</td>
+</tr>
+<tr>
+<td>metal</td>
+<td>94</td>
+<td>6</td>
+<td>94%</td>
+</tr>
+<tr>
+<td>paper</td>
+<td>90</td>
+<td>10</td>
+<td>90%</td>
+</tr>
+<tr>
+<td>plastic</td>
+<td>92</td>
+<td>8</td>
+<td>92%</td>
+</tr>
+<tr>
+<td>trash</td>
+<td>90</td>
+<td>10</td>
+<td>90%</td>
+</tr>
+<tr>
+<td><strong>TOTAL</strong></td>
+<td><strong>553</strong></td>
+<td><strong>47</strong></td>
+<td><strong>92.17%</strong></td>
+</tr>
+</tbody>
+</table>
+<h3>5.3 Konfuzionet kryesore</h3>
+<ul>
+<li>glass → plastic: 3 raste (xham i ngjashëm me plastikë)</li>
+<li>cardboard → trash: 4 raste (karton i shtypur/i ndotur)</li>
+<li>paper → cardboard: 5 raste (letër e trashë)</li>
+<li>trash → paper/plastic: të shpërndarë</li>
+</ul>
+<h3>5.4 Krahasimi i modeleve mbi dataset-in real v2</h3>
+<table>
+<thead>
+<tr>
+<th>Modeli</th>
+<th>Saktësia</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>CNN Baseline</td>
+<td>~30% (vlerësim)</td>
+</tr>
+<tr>
+<td>MobileNetV2</td>
+<td>~70% (vlerësim)</td>
+</tr>
+<tr>
+<td>EfficientNetB0 (TrashNet only)</td>
+<td>78.33%</td>
+</tr>
+<tr>
+<td>EfficientNetB0 + Augmentation</td>
+<td>82.67%</td>
+</tr>
+<tr>
+<td>EfficientNetB0 + Household FT</td>
+<td>88.83%</td>
+</tr>
+<tr>
+<td><strong>EfficientNetB0 + Garbage v2 FT</strong></td>
+<td><strong>92.17%</strong></td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2>6. Gjetjet Kryesore</h2>
+<h3>6.1 Domain Shift — problemi kryesor</h3>
+<p>TrashNet trajnohet me foto studio (sfond i bardhë, ndriçim uniform). Dataset-i real ka sfonde komplekse, ndriçim të ndryshëm, objekte të paqëndrueshme. Kjo krijoi hendek të madh: EfficientNetB0 vetëm nga TrashNet → 78.33% real-world.</p>
+<p><strong>Zgjidhja:</strong> Fine-tuning progresiv me dataset-e reale (TACO → Household → Garbage v2) rriti saktësinë real-world me +13.84pp.</p>
+<h3>6.2 Data Augmentation</h3>
+<p>Konfirmoi hipotezën: +4.34pp real-world pa ndryshim arkitekture. Veçanërisht efektive për imazhe me sfonde të ndryshme.</p>
+<h3>6.3 Test-Time Augmentation (TTA)</h3>
+<p>+1-5pp pa ritrainim — teknikë e thjeshtë me ndikim real. Mesatarizimi i 5 pamjeve redukton ndjeshmërinë ndaj kornizimit.</p>
+<h3>6.4 Rezultate negative me vlerë akademike</h3>
+<ul>
+<li><strong>EXP-006 (rembg):</strong> Heqja e sfondit <em>dëmtoi</em> saktësinë (−2.56pp). Tregon se preprocessing naiv nuk funksionon gjithmonë.</li>
+<li><strong>EXP-010 (Ensemble):</strong> Mesatarizimi i 3 modeleve dha rezultat më të keq se modeli më i mirë vetëm (−3.85pp). Modelet e dobëta "zvarrisin" të fortin.</li>
+</ul>
+<h3>6.5 Transfer Learning kundër CNN nga zero</h3>
+<table>
+<thead>
+<tr>
+<th>Qasja</th>
+<th>TrashNet Val</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>CNN nga zero</td>
+<td>56.44%</td>
+</tr>
+<tr>
+<td>MobileNetV2</td>
+<td>87.13% (+30.69pp)</td>
+</tr>
+<tr>
+<td>EfficientNetB0</td>
+<td>89.90% (+33.46pp)</td>
+</tr>
+</tbody>
+</table>
+<p>Transfer learning është qartësisht superior, veçanërisht kur dataset-i trajnimit është i vogël.</p>
+<h3>6.6 Klasa "trash" — sfida kryesore</h3>
+<p>Trash është klasa më e vështirë: 137 imazhe në TrashNet (vs 594 paper), kategori e paqartë vizualisht (objekte të ndryshme). Me fine-tuning, u rrit nga 52% → 90%.</p>
+<hr />
+<h2>7. Aplikacioni Web</h2>
+<p>U ndërtua një web aplikacion Flask me:
+- <strong>Backend:</strong> Python Flask, model EfficientNetB0 + TTA
+- <strong>Frontend:</strong> HTML/CSS/JavaScript, single-page
+- <strong>Funksionalitete:</strong>
+  - Upload drag &amp; drop i imazhit
+  - Klasifikim real-time
+  - Confidence score dhe bar chart për të 6 klasat
+  - Tip riciklimi për klasën e predikuar
+  - Badge me saktësinë e sistemit (92.2%)</p>
+<p><strong>Komanda për nisje:</strong></p>
+<pre><code class="language-bash">cd waste-classification-master-thesis
+source venv/bin/activate
+python app.py
+# Hap: http://127.0.0.1:5000
+</code></pre>
+<hr />
+<h2>8. Pyetjet Hulumtuese — Përgjigjet</h2>
+<p><strong>Q1: Sa ndryshon performanca TrashNet → real-world?</strong>
+EfficientNetB0 nga TrashNet vetëm: 89.90% TrashNet → 78.33% real-world (−11.57pp domain shift). Me fine-tuning progresiv mbyllet ky hendek: 92.17% real-world.</p>
+<p><strong>Q2: Cila qasje jep performancën më të mirë?</strong>
+EfficientNetB0 + Fine-tune Garbage v2 + TTA: <strong>92.17%</strong> — superior ndaj CNN bazike (+35.73pp) dhe MobileNetV2 (~+22pp).</p>
+<p><strong>Q3: Cilat klasa ngatërrohen më shpesh?</strong>
+Glass↔Plastic (ngjashmëri vizuale e materialit) dhe Trash↔klasat e tjera (kategori e paqartë). Analiza e gabimeve u bë per çdo klasë me emra specifike imazhesh.</p>
+<hr />
+<h2>9. Struktura e Projektit</h2>
+<pre><code>waste-classification-master-thesis/
+├── app.py                              # Web app (Flask)
+├── requirements-app.txt               # Dependencies minimale
+├── templates/index.html               # Frontend UI
+├── src/
+│   ├── data/                          # Skripte përgatitje dataset-esh
+│   │   ├── prepare_garbage_v2.py
+│   │   ├── prepare_household.py
+│   │   └── ...
+│   ├── training/                      # Skripte trajnimi
+│   │   ├── train_garbage_finetune.py  # EXP-011
+│   │   ├── train_object_centric.py    # EXP-008
+│   │   └── ...
+│   ├── inference/
+│   │   └── tta_predict.py             # TTA inferim
+│   └── evaluation/
+│       └── evaluate_tta.py            # Evaluim real-world
+├── data/
+│   ├── real_test_dataset/             # 600 foto reale (held-out)
+│   └── garbage-v2-prepared/           # Dataset trajnimit
+├── results/
+│   └── efficientnet_garbage/          # Model final (~19 MB)
+└── docs/
+    ├── notes.md                       # Log i detajuar i eksperimenteve
+    └── progress_report.md             # Ky dokument
+</code></pre>
+<hr />
+<h2>10. Teknologjitë e Përdorura</h2>
+<table>
+<thead>
+<tr>
+<th>Teknologjia</th>
+<th>Versioni</th>
+<th>Roli</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Python</td>
+<td>3.9</td>
+<td>Gjuha kryesore</td>
+</tr>
+<tr>
+<td>TensorFlow / Keras</td>
+<td>2.16.2</td>
+<td>Framework deep learning</td>
+</tr>
+<tr>
+<td>EfficientNetB0</td>
+<td>—</td>
+<td>Arkitektura kryesore</td>
+</tr>
+<tr>
+<td>PIL / Pillow</td>
+<td>11.3.0</td>
+<td>Preprocessing imazhesh</td>
+</tr>
+<tr>
+<td>NumPy</td>
+<td>1.26.4</td>
+<td>Operacione numerike</td>
+</tr>
+<tr>
+<td>scikit-learn</td>
+<td>1.6.1</td>
+<td>Metrika evaluimi</td>
+</tr>
+<tr>
+<td>Flask</td>
+<td>3.1.3</td>
+<td>Web backend</td>
+</tr>
+<tr>
+<td>Matplotlib / Seaborn</td>
+<td>—</td>
+<td>Vizualizime</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2>11. Gjendja aktuale dhe hapat e ardhshëm</h2>
+<h3>Realizuar plotësisht:</h3>
+<ul>
+<li>✅ CNN bazike nga zero (EXP-001)</li>
+<li>✅ Transfer learning MobileNetV2 dhe EfficientNetB0 (EXP-002, 003)</li>
+<li>✅ Data augmentation (EXP-004)</li>
+<li>✅ Fine-tuning me dataset-e të shumta (EXP-005, 007, 008, 011)</li>
+<li>✅ TTA — Test-Time Augmentation (EXP-009)</li>
+<li>✅ Eksperimente negative të dokumentuara (EXP-006, 010)</li>
+<li>✅ Dataset real 600 foto, i balancuar (100/klasë)</li>
+<li>✅ Evaluim final: 92.17% (553/600)</li>
+<li>✅ Analiza e gabimeve per klasë</li>
+<li>✅ Aplikacion web funksional</li>
+<li>✅ Log i detajuar i eksperimenteve (docs/notes.md)</li>
+<li>✅ README me udhëzime setup/run</li>
+</ul>
+<h3>Mbetet për thesis:</h3>
+<ul>
+<li>📝 Shkrimi i kapitujve të dokumentit të temës</li>
+<li>📝 Analiza e literaturës (kapitulli teorik)</li>
+<li>📝 Diskutimi i rezultateve (interpretim akademik)</li>
+<li>📝 Konkluzionet dhe rekomandimet për punë të ardhshme</li>
+</ul>
+<hr />
+<h2>12. Konkluzion</h2>
+<p>Sistemi i zhvilluar arrin <strong>92.17% saktësi</strong> mbi 600 foto reale të mbledhura nga ambienti i përditshëm — rezultat konkurrues me literaturën ekzistuese, veçanërisht duke marrë parasysh vështirësinë e dataset-it real (sfonde komplekse, ndriçim i ndryshëm, objekte të dëmtuara).</p>
+<p>Kontributi kryesor akademik: demonstrimi sistematik se si <strong>fine-tuning progresiv me dataset-e të larmishme reale</strong> mbyll hendekun e domain shift — nga 78.33% (EfficientNet bazik) në 92.17% (+13.84pp), duke i dhënë përgjigje konkrete pyetjeve hulumtuese të propozimit.</p>
+<hr />
+<p><em>Ky raport u përgatit si përmbledhje e fazës eksperimentale të temës së masterit.</em><br />
+<em>Kodi burimor i plotë ndodhet në: <code>waste-classification-master-thesis/</code> (branch: dev)</em></p>
+</body>
+</html>

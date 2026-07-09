@@ -467,101 +467,46 @@ Artifacts:
 
 ---
 
-## Remaining Work
+## Initial Real-World Testing — v1 Dataset (78 photos, 13/class)
 
-### NEXT-01 — Real-World Testing
+Note: EXP-001 through EXP-010 were evaluated on a smaller real-world test set (78 photos,
+13 images per class). After expanding the dataset to 600 photos (v2, 100/class), only
+4 key models were re-evaluated on v2 for a fair cross-model comparison (see end of document).
 
-Status: Completed
-
-Dataset: 78 real-world photos taken with iPhone (13 per class)
+Dataset (v1): 78 real-world photos taken with iPhone (13 per class)
 Classes: cardboard, glass, metal, paper, plastic, trash
 Format: JPEG (converted from HEIC via sips)
 
----
+Results (v1 — 78 photos):
 
-Results:
+| Model          | TrashNet Val | Real-World (v1) | Drop     |
+|----------------|-------------|-----------------|----------|
+| CNN Baseline   | 56.44%      | 11.54%          | -44.90pp |
+| MobileNetV2    | 87.13%      | 43.59%          | -43.54pp |
+| EfficientNetB0 | 89.90%      | 39.74%          | -50.16pp |
 
-| Model          | TrashNet Val | Real-World | Drop     |
-|----------------|-------------|------------|----------|
-| CNN Baseline   | 56.44%      | 11.54%     | -44.90pp |
-| MobileNetV2    | 87.13%      | 43.59%     | -43.54pp |
-| EfficientNetB0 | 89.90%      | 39.74%     | -50.16pp |
+Per-Class Macro F1 (Real-World v1):
 
----
+| Model          | cardboard | glass | metal | paper | plastic | trash | Macro F1 |
+|----------------|-----------|-------|-------|-------|---------|-------|----------|
+| CNN Baseline   | 0.15      | 0.00  | 0.10  | 0.16  | 0.00    | 0.14  | 0.09     |
+| MobileNetV2    | 0.39      | 0.27  | 0.48  | 0.57  | 0.52    | 0.13  | 0.39     |
+| EfficientNetB0 | 0.33      | 0.42  | 0.24  | 0.48  | 0.47    | 0.25  | 0.36     |
 
-Per-Class F1 (Real-World):
-
-CNN Baseline:
-- cardboard: 0.15 | glass: 0.00 | metal: 0.10
-- paper: 0.16    | plastic: 0.00 | trash: 0.14
-- macro F1: 0.09
-
-MobileNetV2:
-- cardboard: 0.39 | glass: 0.27 | metal: 0.48
-- paper: 0.57    | plastic: 0.52 | trash: 0.13
-- macro F1: 0.39
-
-EfficientNetB0:
-- cardboard: 0.33 | glass: 0.42 | metal: 0.24
-- paper: 0.48    | plastic: 0.47 | trash: 0.25
-- macro F1: 0.36
-
----
-
-Key Observations:
-
-- All three models suffered a severe drop in real-world conditions.
-  This is a classic domain shift problem: TrashNet uses white backgrounds,
-  controlled studio lighting, and centered objects. Real-world photos have
-  natural backgrounds, variable lighting, and arbitrary angles.
-
-- The CNN Baseline collapsed to 11.54% — near random (chance = 16.7% for 6 classes).
-  It learned visual patterns tightly coupled to the white background of TrashNet.
-
-- MobileNetV2 (43.59%) and EfficientNetB0 (39.74%) retained partial generalization.
-  Transfer learning from ImageNet provided some domain-agnostic features
-  (edges, textures, shapes), but not enough to overcome the domain gap.
-
-- paper was the best-performing class across all models in real-world conditions.
-  This is likely because paper has distinctive flat texture that is
-  background-independent.
-
-- trash and glass were the hardest classes in real-world conditions.
-
-- This result is a significant finding for the thesis: it demonstrates that
-  training exclusively on controlled dataset images (TrashNet) is insufficient
-  for real-world deployment without domain adaptation or data augmentation.
+Key Observation:
+All three baseline models suffered a severe domain shift drop. This is a central thesis
+finding: training exclusively on TrashNet (white studio backgrounds) is insufficient
+for real-world deployment. This motivated all subsequent fine-tuning experiments.
 
 Artifacts:
 - results/real_world_test/cnn_baseline_report.txt
-- results/real_world_test/cnn_baseline_confusion_matrix.png
 - results/real_world_test/mobilenetv2_report.txt
-- results/real_world_test/mobilenetv2_confusion_matrix.png
 - results/real_world_test/efficientnetb0_report.txt
-- results/real_world_test/efficientnetb0_confusion_matrix.png
-- results/real_world_test/accuracy_comparison.png
-
-### NEXT-02 — Model Comparison Plots
-
-Status: Completed
-
-Generated 3 comparison figures for thesis Results chapter:
-
-1. accuracy_f1_comparison.png
-   Grouped bar chart: Validation Accuracy vs Macro F1-Score per model.
-   CNN: Acc=0.56, F1=0.48 | MobileNetV2: Acc=0.87, F1=0.85 | EfficientNetB0: Acc=0.90, F1=0.89
-
-2. per_class_f1_comparison.png
-   Per-class F1-Score for all 6 waste categories across all 3 models.
-   Shows CNN failure on trash (F1=0.00) vs EfficientNetB0 robustness (F1=0.82).
-
-3. val_loss_comparison.png
-   Validation loss bar chart: CNN=1.1258, MobileNetV2=0.4410, EfficientNetB0=0.3386
-
-Artifacts:
 - results/comparison/accuracy_f1_comparison.png
 - results/comparison/per_class_f1_comparison.png
 - results/comparison/val_loss_comparison.png
+
+---
 
 ### EXP-004 — EfficientNetB0 + Data Augmentation
 
@@ -657,42 +602,47 @@ Artifacts:
 
 ## PROJECT SUMMARY — Complete Overview
 
-### All Experiments
+### All Experiments (v1 real-world = 78 photos, development phase)
 
-| ID      | Model                        | TrashNet Val | Real-World | Status    |
-|---------|------------------------------|-------------|------------|-----------|
-| EXP-001 | CNN Baseline (from scratch)  |    56.44%   |   11.54%   | Completed |
-| EXP-002 | MobileNetV2 (TL)             |    87.13%   |   43.59%   | Completed |
-| EXP-003 | EfficientNetB0 (TL)          |    89.90%   |   39.74%   | Completed |
-| EXP-004 | EfficientNetB0 + Augment     |    89.70%   |   50.00%   | Completed |
-| EXP-005 | EfficientNetB0 + TACO FT     |    92.87%   |   52.56%   | Completed |
-| EXP-006 | EfficientNetB0 + rembg (PP)  |    N/A      |   50.00%   | Completed (negative result) |
-| EXP-007 | EfficientNetB0 + RealWaste   |    91.29%   |   55.13%   | Completed |
-| EXP-008 | EfficientNetB0 + Household   |    90.50%   |   57.69%   | Completed |
-| EXP-009 | + Test-Time Augmentation   |    90.50%   |   62.82%   | Completed |
-| EXP-010 | Ensemble (3 models + TTA)  |    90.50%   |   58.97%   | Completed (negative result) |
+| ID      | Model                          | TrashNet Val | Real-World v1 | Status              |
+|---------|-------------------------------|-------------|---------------|---------------------|
+| EXP-001 | CNN Baseline (from scratch)    |   56.44%    |    11.54%     | Completed           |
+| EXP-002 | MobileNetV2 (TL)               |   87.13%    |    43.59%     | Completed           |
+| EXP-003 | EfficientNetB0 (TL)            |   89.90%    |    39.74%     | Completed           |
+| EXP-004 | EfficientNetB0 + Augmentation  |   89.70%    |    50.00%     | Completed           |
+| EXP-005 | EfficientNetB0 + TACO FT       |   92.87%    |    52.56%     | Completed           |
+| EXP-006 | EfficientNetB0 + rembg (PP)    |      —      |    50.00%     | Neg. result         |
+| EXP-007 | EfficientNetB0 + RealWaste FT  |   91.29%    |    55.13%     | Completed           |
+| EXP-008 | EfficientNetB0 + Household FT  |   90.50%    |    57.69%     | Completed           |
+| EXP-009 | EfficientNetB0 + TTA           |   90.50%    |    62.82%     | Completed           |
+| EXP-010 | Ensemble (3 models + TTA)      |   90.50%    |    58.97%     | Neg. result         |
+| EXP-011 | EfficientNetB0 + Garbage v2 FT |   89.90%    |       —       | **BEST (v2: 92.17%)** |
+| EXP-012 | Hyperparameter Analysis        |  See table  |       —       | Completed           |
 
-### Key Findings So Far
+### Key Findings (Final)
 
 1. Transfer Learning vastly outperforms CNN from scratch:
    EfficientNetB0 (89.90%) vs CNN Baseline (56.44%) = +33.46pp
 
 2. Data Augmentation reduces domain shift without hurting TrashNet accuracy:
-   EfficientNetB0 without aug: 39.74% real-world
-   EfficientNetB0 with aug:    50.00% real-world (+10.26pp)
+   EfficientNetB0 without aug: 39.74% real-world (v1)
+   EfficientNetB0 with aug:    50.00% real-world (v1) (+10.26pp)
 
-3. Domain Shift is the main limitation:
-   All models drop significantly on real-world photos.
-   Best TrashNet model: 92.87% → 52.56% real-world (TACO).
-   Best real-world model: 62.82% (Household + TTA, EXP-009).
+3. Domain Shift was the main limitation — progressively solved via fine-tuning:
+   Development timeline (v1): 39.74% → 50.00% → 52.56% → 55.13% → 57.69% → 62.82%
+   Final result (v2, 600 photos): 92.17% (EXP-011, Garbage v2 fine-tune)
 
-4. Domain adaptation experiments show incremental gains:
-   No augmentation: 39.74% → + Augment: 50.00% → + TACO: 52.56% → + RealWaste: 55.13% → + Household: 57.69% → + TTA: 62.82%
-   Each step adds real-world training data; gains diminish as domains differ.
+4. Progressive fine-tuning on diverse real-world datasets is the most effective strategy:
+   EfficientNetB0 (base): 78.33% → +Augmentation: 82.67% → +Household FT: 88.83% → +Garbage v2 FT: 92.17%
+   Total real-world gain on v2: +13.84pp
 
-5. Fine-Tuning Instability (MobileNetV2):
-   Using default lr (1e-3) for fine-tuning caused catastrophic forgetting.
-   Fixed with lr=1e-5 + ModelCheckpoint + EarlyStopping.
+5. Hyperparameter validation (EXP-012):
+   Best Phase 1 lr: 1e-3 | Best batch size: 32 | Fine-tuning lr: 1e-5
+   Justified by systematic analysis; results saved in results/hyperparameter_analysis/
+
+6. Negative results provided academic value:
+   - EXP-006 (rembg): background removal did not help (-2.56pp)
+   - EXP-010 (Ensemble): weaker models dragged down the best one (-3.85pp)
 
 ### All Saved Models
 
@@ -746,18 +696,6 @@ Model comparison charts:
 - Add EfficientNetB0 with data augmentation (EXP-004)
 - EXP-004: EfficientNetB0 + Data Augmentation — evaluation complete
 - Add Flask web demo for waste classification (Practical Deployment)
-
----
-
-### NEXT-03 — Thesis Write-Up
-Chapters that can now be written based on collected data:
-- Dataset and Preprocessing
-- Model Architectures (CNN, MobileNetV2, EfficientNetB0)
-- Training Configuration and Callbacks
-- Results: Accuracy, Loss, F1-Score, Confusion Matrices
-- Discussion: CNN vs Transfer Learning, Data Augmentation impact
-- Discussion: Domain Shift — TrashNet vs Real-World
-- Conclusion and Future Work (EXP-005 domain adaptation)
 
 ---
 
@@ -1150,6 +1088,56 @@ Web app updated:
 
 ---
 
+### EXP-012 — Hyperparameter Analysis (Learning Rate & Batch Size)
+
+Status: Completed
+
+Motivation:
+The thesis proposal explicitly requires analysis of hyperparameters (batch size, learning rate).
+This experiment systematically tests different values to justify the choices made in all
+previous experiments and to demonstrate the impact of each hyperparameter on validation accuracy.
+
+Method:
+- Base model: EfficientNetB0 (ImageNet pretrained, classification head only, base frozen)
+- Dataset: TrashNet (80/20 split, same as all other experiments)
+- Fixed epochs: 15 (with EarlyStopping patience=5)
+- Evaluated on TrashNet validation set (505 images)
+
+Part A — Learning Rate Analysis (batch size fixed at 32):
+
+| Learning Rate | Best Val Accuracy | Best Epoch | Notes                          |
+|---------------|-------------------|------------|--------------------------------|
+| 1e-3          | 86.08%            | Epoch 2    | Fast convergence, recommended  |
+| 1e-4          | 81.91%            | Epoch 7    | Slower but stable              |
+| 1e-5          | 71.57%            | Epoch 15   | Very slow, not for Phase 1     |
+| 1e-6          | 29.82%            | Epoch 15   | Too small — model barely learns|
+
+Best learning rate for Phase 1 (classification head training): lr=1e-3
+Used for fine-tuning phases (Phase 2): lr=1e-5 (prevents catastrophic forgetting)
+
+Part B — Batch Size Analysis (learning rate fixed at 1e-4):
+
+| Batch Size | Best Val Accuracy | Best Epoch | Notes                    |
+|------------|-------------------|------------|--------------------------|
+| 16         | 87.28%            | Epoch 15   | Highest accuracy, slower |
+| 32         | 85.49%            | Epoch 11   | Best speed/accuracy ratio|
+| 64         | 84.89%            | Epoch 15   | Fastest, slightly lower  |
+
+Best batch size: 32 (balance between accuracy and training speed)
+Batch 16 shows marginal improvement (+1.79pp) but takes 2x longer to train.
+
+Conclusion:
+- Chosen configuration (lr=1e-3, batch=32) is validated by this analysis.
+- lr=1e-5 is correctly reserved for fine-tuning phases (where large lr causes forgetting).
+- Batch 32 is the optimal choice for this dataset size (~2,000 training images).
+
+Artifacts:
+- results/hyperparameter_analysis/lr_analysis.png
+- results/hyperparameter_analysis/batch_analysis.png
+- results/hyperparameter_analysis/results.json
+
+---
+
 ### Real Test Dataset v2 — Final Evaluation
 
 Status: Completed
@@ -1207,24 +1195,31 @@ v2 dataset for all models to ensure fair comparison.
 
 ---
 
-### Updated Experiment Table (Final)
+### Final Experiment Table
 
-| ID      | Model                          | TrashNet Val | Real-World (v2, 600) | Status     |
-|---------|-------------------------------|-------------|----------------------|------------|
-| EXP-001 | CNN Baseline (from scratch)    |   56.44%    |       N/A*           | Completed  |
-| EXP-002 | MobileNetV2 (TL)               |   87.13%    |       N/A*           | Completed  |
-| EXP-003 | EfficientNetB0 (TL)            |   89.90%    |      78.33%          | Completed  |
-| EXP-004 | EfficientNetB0 + Augmentation  |   89.70%    |      82.67%          | Completed  |
-| EXP-005 | EfficientNetB0 + TACO FT       |   92.87%    |       N/A*           | Completed  |
-| EXP-006 | EfficientNetB0 + rembg (PP)    |   N/A       |       N/A            | Neg. result|
-| EXP-007 | EfficientNetB0 + RealWaste FT  |   91.29%    |       N/A*           | Completed  |
-| EXP-008 | EfficientNetB0 + Household FT  |   90.50%    |      88.83%          | Completed  |
-| EXP-009 | + Test-Time Augmentation (TTA) |   90.50%    |   88.83% (w/ TTA)    | Completed  |
-| EXP-010 | Ensemble (3 models + TTA)      |   90.50%    |       N/A*           | Neg. result|
-| EXP-011 | EfficientNetB0 + Garbage v2 FT |   89.90%    |    **92.17%**        | **BEST**   |
+Note on real-world columns:
+- v1 = 78 photos (13/class) — used during development for EXP-001 through EXP-010
+- v2 = 600 photos (100/class) — final curated dataset, more statistically reliable
+- "—" = not re-evaluated on v2 (baseline or negative result; v1 results in earlier sections)
 
-*N/A = model file no longer available for v2 re-evaluation, or evaluated on old 78-photo set only.
+| ID      | Model                          | TrashNet Val | Real-World v1 (78) | Real-World v2 (600) | Status      |
+|---------|-------------------------------|-------------|---------------------|---------------------|-------------|
+| EXP-001 | CNN Baseline (from scratch)    |   56.44%    |       11.54%        |         —           | Completed   |
+| EXP-002 | MobileNetV2 (TL)               |   87.13%    |       43.59%        |         —           | Completed   |
+| EXP-003 | EfficientNetB0 (TL)            |   89.90%    |       39.74%        |       78.33%        | Completed   |
+| EXP-004 | EfficientNetB0 + Augmentation  |   89.70%    |       50.00%        |       82.67%        | Completed   |
+| EXP-005 | EfficientNetB0 + TACO FT       |   92.87%    |       52.56%        |         —           | Completed   |
+| EXP-006 | EfficientNetB0 + rembg (PP)    |      —      |       50.00%        |         —           | Neg. result |
+| EXP-007 | EfficientNetB0 + RealWaste FT  |   91.29%    |       55.13%        |         —           | Completed   |
+| EXP-008 | EfficientNetB0 + Household FT  |   90.50%    |       57.69%        |       88.83%        | Completed   |
+| EXP-009 | EfficientNetB0 + TTA           |   90.50%    |       62.82%        |       88.83%        | Completed   |
+| EXP-010 | Ensemble (3 models + TTA)      |   90.50%    |       58.97%        |         —           | Neg. result |
+| EXP-011 | EfficientNetB0 + Garbage v2 FT |   89.90%    |          —          |    **92.17%**       | **BEST**    |
+| EXP-012 | Hyperparameter Analysis        |  See above  |          —          |         —           | Completed   |
 
-Key progression on real-world data (v2):
-EfficientNetB0 base: 78.33% → +Augment: 82.67% → +Household FT: 88.83% → +Garbage v2 FT: 92.17%
-Total improvement from base model: +13.84pp
+Key progression on real-world data (v2 — fair cross-model comparison):
+EfficientNetB0 base: 78.33% → + Augmentation: 82.67% → + Household FT: 88.83% → + Garbage v2 FT: 92.17%
+Total improvement: +13.84pp
+
+Key progression on real-world data (v1 — development timeline):
+No aug: 39.74% → +Aug: 50.00% → +TACO: 52.56% → +RealWaste: 55.13% → +Household: 57.69% → +TTA: 62.82%

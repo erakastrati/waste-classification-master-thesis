@@ -21,12 +21,36 @@ IMAGE_SIZE  = (224, 224)
 CLASS_NAMES = ["cardboard", "glass", "metal", "paper", "plastic", "trash"]
 
 CLASS_INFO = {
-    "cardboard": {"icon": "📦", "color": "#8B6914", "tip": "Flatten boxes and remove tape before recycling."},
-    "glass":     {"icon": "🍶", "color": "#4A90D9", "tip": "Rinse glass containers before placing in the glass bin."},
-    "metal":     {"icon": "🥫", "color": "#7F8C8D", "tip": "Empty and rinse cans. Remove labels if possible."},
-    "paper":     {"icon": "📄", "color": "#27AE60", "tip": "Keep paper dry. Greasy paper (pizza boxes) goes to general waste."},
-    "plastic":   {"icon": "♻️",  "color": "#E74C3C", "tip": "Check the recycling number on the bottom before sorting."},
-    "trash":     {"icon": "🗑️", "color": "#95A5A6", "tip": "This item cannot be recycled. Dispose in general waste."},
+    "cardboard": {
+        "icon": "📦",
+        "color": "#8B6914",
+        "tip": "Palos kartonin dhe hiq shiritin ngjites para riciklimit"
+    },
+    "glass": {
+        "icon": "🍶",
+        "color": "#4A90D9",
+        "tip": "Shpelaj enet prej qelqi para se te hedhesh ne koshin per qelq"
+    },
+    "metal": {
+        "icon": "🥫",
+        "color": "#7F8C8D",
+        "tip": "Zbraz dhe shperlaj kanaqet. Hiq etiketat nese eshte e mundur"
+    },
+    "paper": {
+        "icon": "📄",
+        "color": "#27AE60",
+        "tip": "Mbaje letren te thate. Letra e yndyrshme (si kutite e picave) hidhet te mbeturinat e pergjithshm"
+    },
+    "plastic": {
+        "icon": "♻️",
+        "color": "#E74C3C",
+        "tip": "Kontrollo numrin e riciklimit ne fund te produktit para ndarjes"
+    },
+    "trash": {
+        "icon": "🗑️",
+        "color": "#95A5A6",
+        "tip": "Ky objekt nuk mund te riciklohet. Hidhe te mbeturinat e pergjithshme"
+    },
 }
 
 print("Loading model...")

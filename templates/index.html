@@ -608,7 +608,7 @@
           <div class="filename" id="filename-label">—</div>
           <button id="classify-btn" disabled>
             <div class="spinner"></div>
-            <span class="btn-text">Classify Image</span>
+            <span class="btn-text">Klasifiko imazhin</span>
           </button>
         </div>
       </div>
@@ -621,7 +621,7 @@
       <div class="result-placeholder">
         <div>
           <div class="icon">🔍</div>
-          <p>Upload an image and click <strong>Classify Image</strong> to see the result here</p>
+          <p>Ngarko nje imazh dhe kliko <strong>Klasifiko imazhin</strong> per te shfaqur rezultatin.</p>
         </div>
       </div>
 
@@ -671,6 +671,19 @@
     plastic:   "#E74C3C",
     trash:     "#95A5A6",
   };
+
+  const CLASS_LABELS = {
+    cardboard: "Karton",
+    glass:     "Qelq",
+    metal:     "Metal",
+    paper:     "Letër",
+    plastic:   "Plastikë",
+    trash:     "Mbeturinë e perziera",
+  };
+
+  function labelClass(cls) {
+    return CLASS_LABELS[cls] || cls;
+  }
 
   let selectedFile = null;
 
@@ -723,11 +736,11 @@
       document.getElementById("result-icon").style.border = "2px solid " + color + "55";
 
       const nameEl = document.getElementById("class-name");
-      nameEl.textContent = data.predicted_class;
+      nameEl.textContent = labelClass(data.predicted_class);
       nameEl.style.color = color;
 
       const badge = document.getElementById("confidence-badge");
-      badge.textContent = "Confidence: " + data.confidence + "%";
+      badge.textContent = "Besueshmeria: " + data.confidence + "%";
       badge.style.color = color;
 
       document.getElementById("tip-text").textContent = data.tip;
@@ -743,7 +756,7 @@
 
         container.innerHTML += `
           <div class="bar-row">
-            <div class="bar-label" style="${isTop ? "color:#f1f5f9;font-weight:700" : ""}">${cls}</div>
+            <div class="bar-label" style="${isTop ? "color:#f1f5f9;font-weight:700" : ""}">${labelClass(cls)}</div>
             <div class="bar-track">
               <div class="bar-fill" style="width:${pct}%;background:${isTop ? barColor : "#334155"}"></div>
             </div>

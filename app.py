@@ -70,12 +70,12 @@ def index():
 @app.route("/predict", methods=["POST"])
 def predict():
     if "image" not in request.files:
-        return jsonify({"error": "No image uploaded."}), 400
+        return jsonify({"error": "Asnje imazh nuk eshte ngarkuar"}), 400
 
     file = request.files["image"]
 
     if file.filename == "":
-        return jsonify({"error": "No file selected."}), 400
+        return jsonify({"error": "Asnje file nuk eshte zgjedhur"}), 400
 
     try:
         img = Image.open(file.stream).convert("RGB")

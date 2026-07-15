@@ -589,7 +589,7 @@
       <div class="drop-zone" id="drop-zone">
         <input type="file" id="file-input" accept="image/*" />
         <div class="upload-icon">📂</div>
-        <p>Drag & drop nje imazh ose <strong>ose kliko per ta zgjedhur</strong></p>
+        <p>Drag & drop nje imazh ose <strong>kliko per ta zgjedhur</strong></p>
         <p style="margin-top:6px;font-size:0.8rem;">Formatet e mbeshtetura: JPG, PNG, HEIC • Max 10 MB</p>
       </div>
 
@@ -676,9 +676,9 @@
     cardboard: "Karton",
     glass:     "Qelq",
     metal:     "Metal",
-    paper:     "Letër",
-    plastic:   "Plastikë",
-    trash:     "Mbeturinë e perziera",
+    paper:     "Leter",
+    plastic:   "Plastike",
+    trash:     "Mbeturine e perzier",
   };
 
   function labelClass(cls) {
@@ -766,13 +766,11 @@
 
       const warningEl = document.getElementById("confidence-warning");
       if (data.confidence < 50) {
-        warningEl.innerHTML = `<strong>Very low confidence (${data.confidence}%)</strong> — the model is uncertain. Try cropping the image to focus only on the object.`;
-        warningEl.style.display = "block";
+        warningEl.innerHTML = `<strong>Besueshmeri shume e ulet (${data.confidence}%)</strong> - modeli nuk eshte i sigurt. Provoni ta prisni imazhin ne menyre qe te shfaqet vetem objekti.`;        warningEl.style.display = "block";
         warningEl.style.borderColor = "#ef4444";
         warningEl.style.color = "#fca5a5";
       } else if (data.confidence < 70) {
-        warningEl.innerHTML = `<strong>Low confidence (${data.confidence}%)</strong> — result may be inaccurate. Try photographing the object against a plain background.`;
-        warningEl.style.display = "block";
+        warningEl.innerHTML = `<strong>Besueshmeri e ulet (${data.confidence}%)</strong> - rezultati mund te mos jete i sakte. Provoni ta fotografoni objektin mbi nje sfond te thjeshte.`;        warningEl.style.display = "block";
         warningEl.style.borderColor = "#f59e0b";
         warningEl.style.color = "#fcd34d";
       } else {

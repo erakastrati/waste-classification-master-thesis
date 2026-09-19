@@ -81,11 +81,17 @@ Janë përdorur dy arkitektura:
 
 ### 3.3 Data Augmentation
 
-Aplikuar gjatë trajnimit:
-- Kthim horizontal (flip)
-- Rrotullim ±20°
-- Zoom ±15%
-- Ndryshim ndriçimi
+Aplikuar vetëm gjatë trajnimit, nga EXP-004 e tutje (jo te EXP-001–003).
+Validimi TrashNet dhe 600 fotot e testit nuk i marrin këto transformime.
+
+- RandomFlip("horizontal") — pasqyrim horizontal rastësor
+- RandomRotation(0.15) — ±54° (jo ±15°; Keras factor × 360°)
+- RandomZoom(0.15) — ±15% zoom
+- RandomContrast(0.2) — ±20% kontrast
+- fill_mode default: reflect (jo kënde të zeza)
+
+Nuk u përdor: ndriçim, zhvendosje, pasqyrim vertikal.
+TTA është tjetër teknikë (vetëm inferencë, 5 pamje, pa rrotullim/zoom/kontrast).
 
 ### 3.4 Test-Time Augmentation (TTA)
 

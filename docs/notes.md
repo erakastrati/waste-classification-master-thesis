@@ -518,11 +518,22 @@ Project proposal explicitly requires comparison with/without data augmentation.
 Previous EfficientNetB0 (EXP-003) trained without augmentation.
 This experiment adds augmentation to address the domain gap observed in real-world testing.
 
-Augmentation Layers (applied during training only):
-- RandomFlip("horizontal")
-- RandomRotation(0.15) — ±15 degrees
-- RandomZoom(0.15) — ±15% zoom
+Augmentation Layers (Keras preprocessing inside the model; training only):
+- RandomFlip("horizontal") — random horizontal flip
+- RandomRotation(0.15) — ±54° (factor is a fraction of 360°, NOT ±15°)
+- RandomZoom(0.15) — ±15% zoom, aspect ratio preserved
 - RandomContrast(0.2) — ±20% contrast
+- fill_mode was not set; Keras 2.16 default is "reflect" (empty regions
+  are mirrored, not filled with black pixels)
+- These four layers are inactive at validation, evaluate(), and predict()
+  (training=False). They were never applied to the 600-image held-out test.
+- NOT used: vertical flip, brightness, translation, shear
+- EXP-001–EXP-003: no augmentation layers
+- EXP-004 onward: layers are part of the saved .keras graph and stay
+  active during later fine-tunes (load_model in EXP-005/007/008/011)
+- Distinct from TTA: TTA is inference-only, 5 fixed views
+  (original, H-flip, center crop 85%, center crop 70%, flipped crop 85%),
+  with no rotation, zoom, or contrast (src/inference/tta_predict.py)
 
 Architecture:
 Input → Augmentation → EfficientNetB0 base → GlobalAveragePooling2D
@@ -572,10 +583,11 @@ Real-World Comparison (with vs without augmentation):
 - Improvement: +10.26pp on real-world data
 
 Key Observation:
-Data augmentation improved real-world generalization by +10.26pp while maintaining
-near-identical TrashNet validation performance (-0.20pp). This is the central
-finding for the augmentation section of the thesis: augmentation reduces domain
-shift without sacrificing controlled-environment accuracy.
+On the development set (v1, 78 photos) augmentation improved real-world
+accuracy by +10.26pp (39.74% → 50.00%) with near-identical TrashNet
+validation (−0.20pp). On the final held-out set (v2, 600 photos) the
+same pair is 78.33% → 82.67% (+4.34pp). Thesis Table 10 uses the v2
+numbers. Do not mix v1 and v2 when quoting the augmentation effect.
 
 All 4-model real-world comparison summary:
 | Model                    | TrashNet Val | Real-World | Gap      |
@@ -1177,7 +1189,11 @@ Remaining errors (47 total):
 
 ### Cross-Model Comparison — Real Test Dataset v2 (600 photos, TTA)
 
-All 4 main models evaluated on the same v2 dataset for fair comparison:
+All 4 main models evaluated on the same v2 dataset for fair comparison.
+Training-time Keras layers (flip/rotation/zoom/contrast) are OFF at test.
+The "TTA" in this heading is a separate inference protocol (5 views).
+EXP-011 92.17% is Garbage v2 + TTA; the same model without TTA is 89.50%.
+Household FT is 88.83% on v2 with or without TTA.
 
 | Model                          | Real-World v2 | Correct/600 |
 |-------------------------------|---------------|-------------|

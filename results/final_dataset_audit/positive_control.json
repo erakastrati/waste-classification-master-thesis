@@ -1,0 +1,55 @@
+{
+  "resize50_jpeg30": {
+    "n": 60,
+    "found_by_hash": 60,
+    "original_in_embedding_top5": 60,
+    "found_by_embedding+sift": 60,
+    "found_by_any_layer": 60
+  },
+  "center_crop80": {
+    "n": 60,
+    "found_by_hash": 0,
+    "original_in_embedding_top5": 60,
+    "found_by_embedding+sift": 60,
+    "found_by_any_layer": 60
+  },
+  "center_crop60_resized": {
+    "n": 60,
+    "found_by_hash": 0,
+    "original_in_embedding_top5": 57,
+    "found_by_embedding+sift": 57,
+    "found_by_any_layer": 57
+  },
+  "hflip": {
+    "n": 60,
+    "found_by_hash": 60,
+    "original_in_embedding_top5": 60,
+    "found_by_embedding+sift": 60,
+    "found_by_any_layer": 60
+  },
+  "rotate90": {
+    "n": 60,
+    "found_by_hash": 60,
+    "original_in_embedding_top5": 55,
+    "found_by_embedding+sift": 55,
+    "found_by_any_layer": 60
+  },
+  "brightness_contrast": {
+    "n": 60,
+    "found_by_hash": 60,
+    "original_in_embedding_top5": 60,
+    "found_by_embedding+sift": 60,
+    "found_by_any_layer": 60
+  },
+  "squash224_jpeg85": {
+    "n": 60,
+    "found_by_hash": 60,
+    "original_in_embedding_top5": 60,
+    "found_by_embedding+sift": 25,
+    "found_by_any_layer": 60
+  },
+  "_overall": {
+    "n": 420,
+    "found_by_any_layer": 417
+  }
+}

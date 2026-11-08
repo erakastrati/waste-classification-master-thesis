@@ -1,0 +1,116 @@
+{
+  "cross_test": {
+    "trashnet": {
+      "sha": 0,
+      "pix": 0
+    },
+    "taco_crops": {
+      "sha": 0,
+      "pix": 0
+    },
+    "realwaste_prepared": {
+      "sha": 0,
+      "pix": 0
+    },
+    "household_prepared": {
+      "sha": 0,
+      "pix": 0
+    },
+    "garbage_prepared": {
+      "sha": 0,
+      "pix": 0
+    },
+    "taco_full": {
+      "sha": 0,
+      "pix": 0
+    },
+    "realwaste_raw": {
+      "sha": 0,
+      "pix": 0
+    },
+    "household_raw": {
+      "sha": 0,
+      "pix": 0
+    },
+    "garbage_original": {
+      "sha": 0,
+      "pix": 0
+    },
+    "test_internal": {
+      "sha": {
+        "groups": 0,
+        "files_in_groups": 0,
+        "examples": []
+      },
+      "pix": {
+        "groups": 0,
+        "files_in_groups": 0,
+        "examples": []
+      }
+    }
+  },
+  "intra_set": {
+    "test": {
+      "sha": 0,
+      "pix": 0
+    },
+    "trashnet": {
+      "sha": 3,
+      "pix": 3
+    },
+    "taco_crops": {
+      "sha": 0,
+      "pix": 0
+    },
+    "taco_full": {
+      "sha": 1,
+      "pix": 1
+    },
+    "realwaste_raw": {
+      "sha": 0,
+      "pix": 0
+    },
+    "realwaste_prepared": {
+      "sha": 0,
+      "pix": 0
+    },
+    "household_raw": {
+      "sha": 386,
+      "pix": 386
+    },
+    "household_prepared": {
+      "sha": 386,
+      "pix": 386
+    },
+    "garbage_original": {
+      "sha": 0,
+      "pix": 0
+    },
+    "garbage_prepared": {
+      "sha": 0,
+      "pix": 0
+    }
+  },
+  "raw_vs_prepared": {
+    "realwaste_raw__realwaste_prepared": {
+      "n_raw": 3905,
+      "n_prepared": 3905,
+      "byte_identical_multiset": true
+    },
+    "household_raw__household_prepared": {
+      "n_raw": 7500,
+      "n_prepared": 7500,
+      "byte_identical_multiset": true
+    }
+  },
+  "trashnet_supplementary": {
+    "sha:train->garbage_original": 1464,
+    "sha:val->garbage_original": 361,
+    "sha:train+ftval->garbage_original": 309,
+    "sha:val+ftval->garbage_original": 86,
+    "pix:train->garbage_original": 1464,
+    "pix:val->garbage_original": 361,
+    "pix:train+ftval->garbage_original": 309,
+    "pix:val+ftval->garbage_original": 86
+  }
+}

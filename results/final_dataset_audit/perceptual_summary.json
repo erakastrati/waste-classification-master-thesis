@@ -1,0 +1,157 @@
+{
+  "trashnet": {
+    "candidates_pairs": 2607,
+    "test_imgs_with_candidate": 270,
+    "test_imgs_confirmed": 1,
+    "test_imgs_review": 35,
+    "min_phash_distance_over_test_imgs": 8,
+    "phash_dist_histogram": {
+      "0-4": 0,
+      "5-10": 9,
+      "11-12": 36,
+      "13-16": 459,
+      ">16": 96
+    },
+    "median_nearest_phash_distance": 16.0
+  },
+  "taco_crops": {
+    "candidates_pairs": 541,
+    "test_imgs_with_candidate": 201,
+    "test_imgs_confirmed": 0,
+    "test_imgs_review": 16,
+    "min_phash_distance_over_test_imgs": 8,
+    "phash_dist_histogram": {
+      "0-4": 0,
+      "5-10": 6,
+      "11-12": 61,
+      "13-16": 510,
+      ">16": 23
+    },
+    "median_nearest_phash_distance": 16.0
+  },
+  "realwaste_prepared": {
+    "candidates_pairs": 1233,
+    "test_imgs_with_candidate": 231,
+    "test_imgs_confirmed": 0,
+    "test_imgs_review": 18,
+    "min_phash_distance_over_test_imgs": 8,
+    "phash_dist_histogram": {
+      "0-4": 0,
+      "5-10": 12,
+      "11-12": 53,
+      "13-16": 439,
+      ">16": 96
+    },
+    "median_nearest_phash_distance": 16.0
+  },
+  "household_prepared": {
+    "candidates_pairs": 2145,
+    "test_imgs_with_candidate": 282,
+    "test_imgs_confirmed": 0,
+    "test_imgs_review": 6,
+    "min_phash_distance_over_test_imgs": 8,
+    "phash_dist_histogram": {
+      "0-4": 0,
+      "5-10": 14,
+      "11-12": 71,
+      "13-16": 497,
+      ">16": 18
+    },
+    "median_nearest_phash_distance": 14.0
+  },
+  "garbage_prepared": {
+    "candidates_pairs": 6072,
+    "test_imgs_with_candidate": 430,
+    "test_imgs_confirmed": 1,
+    "test_imgs_review": 49,
+    "min_phash_distance_over_test_imgs": 6,
+    "phash_dist_histogram": {
+      "0-4": 0,
+      "5-10": 27,
+      "11-12": 114,
+      "13-16": 459,
+      ">16": 0
+    },
+    "median_nearest_phash_distance": 14.0
+  },
+  "taco_full": {
+    "candidates_pairs": 256,
+    "test_imgs_with_candidate": 124,
+    "test_imgs_confirmed": 0,
+    "test_imgs_review": 12,
+    "min_phash_distance_over_test_imgs": 10,
+    "phash_dist_histogram": {
+      "0-4": 0,
+      "5-10": 4,
+      "11-12": 24,
+      "13-16": 463,
+      ">16": 109
+    },
+    "median_nearest_phash_distance": 16.0
+  },
+  "realwaste_raw": {
+    "candidates_pairs": 1233,
+    "test_imgs_with_candidate": 231,
+    "test_imgs_confirmed": 0,
+    "test_imgs_review": 18,
+    "min_phash_distance_over_test_imgs": 8,
+    "phash_dist_histogram": {
+      "0-4": 0,
+      "5-10": 12,
+      "11-12": 53,
+      "13-16": 439,
+      ">16": 96
+    },
+    "median_nearest_phash_distance": 16.0
+  },
+  "household_raw": {
+    "candidates_pairs": 2145,
+    "test_imgs_with_candidate": 282,
+    "test_imgs_confirmed": 0,
+    "test_imgs_review": 6,
+    "min_phash_distance_over_test_imgs": 8,
+    "phash_dist_histogram": {
+      "0-4": 0,
+      "5-10": 14,
+      "11-12": 71,
+      "13-16": 497,
+      ">16": 18
+    },
+    "median_nearest_phash_distance": 14.0
+  },
+  "garbage_original": {
+    "candidates_pairs": 6061,
+    "test_imgs_with_candidate": 429,
+    "test_imgs_confirmed": 1,
+    "test_imgs_review": 49,
+    "min_phash_distance_over_test_imgs": 6,
+    "phash_dist_histogram": {
+      "0-4": 0,
+      "5-10": 28,
+      "11-12": 114,
+      "13-16": 458,
+      ">16": 0
+    },
+    "median_nearest_phash_distance": 14.0
+  },
+  "test(internal)": {
+    "candidates_pairs": 129,
+    "test_imgs_with_candidate": 66,
+    "test_imgs_confirmed": 0,
+    "test_imgs_review": 10,
+    "min_phash_distance_over_test_imgs": 10,
+    "phash_dist_histogram": {
+      "0-4": 0,
+      "5-10": 4,
+      "11-12": 5,
+      "13-16": 228,
+      ">16": 363
+    },
+    "median_nearest_phash_distance": 18.0
+  },
+  "garbage_prepared_vs_original": {
+    "n_prepared": 12259,
+    "n_with_orig_pHash<=4": 12257,
+    "max_min_dist": 8
+  }
+}

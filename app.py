@@ -6,7 +6,7 @@ import numpy as np
 os.environ.setdefault("FLASK_SKIP_DOTENV", "1")
 
 from flask import Flask, request, jsonify, render_template
-from PIL import Image
+from PIL import Image, ImageOps
 from tensorflow.keras.models import load_model
 from src.inference.tta_predict import predict_with_tta
 
@@ -78,7 +78,7 @@ def predict():
         return jsonify({"error": "Asnje file nuk eshte zgjedhur"}), 400
 
     try:
-        img = Image.open(file.stream).convert("RGB")
+        img = ImageOps.exif_transpose(Image.open(file.stream)).convert("RGB")
 
         predictions = predict_with_tta(model, img, IMAGE_SIZE)
         confidence_scores = {

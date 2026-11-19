@@ -1,0 +1,217 @@
+{
+  "experiments": [
+    "EXP-003",
+    "EXP-004"
+  ],
+  "seed": 42,
+  "rng": "CPython random.Random, constructed again for each class",
+  "python": "3.9.21 (main, Dec  3 2024, 17:50:13) \n[Clang 16.0.0 (clang-1600.0.26.4)]",
+  "rounding": "validation units = int(0.2 * class_units); those are the last units after the shuffle",
+  "unit_sort": "lexicographically smallest relative path, then shuffle",
+  "manifest_sort": "relative paths sorted lexicographically",
+  "disk_counts": {
+    "cardboard": 403,
+    "glass": 501,
+    "metal": 410,
+    "paper": 594,
+    "plastic": 482,
+    "trash": 137
+  },
+  "per_class": {
+    "cardboard": {
+      "units": 403,
+      "train_units": 323,
+      "val_units": 80,
+      "train_files": 323,
+      "val_files": 80
+    },
+    "glass": {
+      "units": 500,
+      "train_units": 400,
+      "val_units": 100,
+      "train_files": 400,
+      "val_files": 100
+    },
+    "metal": {
+      "units": 407,
+      "train_units": 326,
+      "val_units": 81,
+      "train_files": 328,
+      "val_files": 81
+    },
+    "paper": {
+      "units": 588,
+      "train_units": 471,
+      "val_units": 117,
+      "train_files": 475,
+      "val_files": 119
+    },
+    "plastic": {
+      "units": 481,
+      "train_units": 385,
+      "val_units": 96,
+      "train_files": 385,
+      "val_files": 96
+    },
+    "trash": {
+      "units": 137,
+      "train_units": 110,
+      "val_units": 27,
+      "train_files": 110,
+      "val_files": 27
+    }
+  },
+  "exclusions": [
+    "data/trashNet-dataset/glass/glass176.jpg",
+    "data/trashNet-dataset/metal/metal91.jpg",
+    "data/trashNet-dataset/plastic/plastic332.jpg"
+  ],
+  "groups": [
+    {
+      "group_id": "GRP-P038",
+      "pair_id": "P038",
+      "decision": "same_object_different_photo",
+      "paths": [
+        "data/trashNet-dataset/metal/metal149.jpg",
+        "data/trashNet-dataset/metal/metal9.jpg"
+      ],
+      "class_name": "metal",
+      "split": "train"
+    },
+    {
+      "group_id": "GRP-P039",
+      "pair_id": "P039",
+      "decision": "visual_duplicate",
+      "paths": [
+        "data/trashNet-dataset/metal/metal122.jpg",
+        "data/trashNet-dataset/metal/metal57.jpg"
+      ],
+      "class_name": "metal",
+      "split": "train"
+    },
+    {
+      "group_id": "GRP-P037",
+      "pair_id": "P037",
+      "decision": "visual_duplicate",
+      "paths": [
+        "data/trashNet-dataset/paper/paper2.jpg",
+        "data/trashNet-dataset/paper/paper40.jpg"
+      ],
+      "class_name": "paper",
+      "split": "train"
+    },
+    {
+      "group_id": "GRP-P007",
+      "pair_id": "P007",
+      "decision": "visual_duplicate",
+      "paths": [
+        "data/trashNet-dataset/paper/paper147.jpg",
+        "data/trashNet-dataset/paper/paper99.jpg"
+      ],
+      "class_name": "paper",
+      "split": "train"
+    },
+    {
+      "group_id": "GRP-P004",
+      "pair_id": "P004",
+      "decision": "visual_duplicate",
+      "paths": [
+        "data/trashNet-dataset/paper/paper101.jpg",
+        "data/trashNet-dataset/paper/paper108.jpg"
+      ],
+      "class_name": "paper",
+      "split": "train"
+    },
+    {
+      "group_id": "GRP-P006",
+      "pair_id": "P006",
+      "decision": "visual_duplicate",
+      "paths": [
+        "data/trashNet-dataset/paper/paper345.jpg",
+        "data/trashNet-dataset/paper/paper451.jpg"
+      ],
+      "class_name": "paper",
+      "split": "train"
+    },
+    {
+      "group_id": "GRP-P003",
+      "pair_id": "P003",
+      "decision": "visual_duplicate",
+      "paths": [
+        "data/trashNet-dataset/paper/paper185.jpg",
+        "data/trashNet-dataset/paper/paper390.jpg"
+      ],
+      "class_name": "paper",
+      "split": "val"
+    },
+    {
+      "group_id": "GRP-P005",
+      "pair_id": "P005",
+      "decision": "visual_duplicate",
+      "paths": [
+        "data/trashNet-dataset/paper/paper180.jpg",
+        "data/trashNet-dataset/paper/paper284.jpg"
+      ],
+      "class_name": "paper",
+      "split": "val"
+    }
+  ],
+  "register": "results/retraining_2026/audit/EXP-004/visual_review_register.csv",
+  "register_sha256": "0e3227fab6704e597f24c93433671e48f0614dd7629fc37de9ea31cff57a0972",
+  "train_txt_sha256": "89380f2fc59ee5063a0383903225779b7b3659528376815941313197d5cf42ea",
+  "val_txt_sha256": "b6f18ad2baec2b11ee4abd552af043037dfd16015c502eebb5a15b453d1b35c2",
+  "train_files": 2021,
+  "val_files": 503,
+  "checks": [
+    {
+      "check": "no path overlap",
+      "passed": true,
+      "detail": "overlap 0"
+    },
+    {
+      "check": "inventory partition",
+      "passed": true,
+      "detail": "train 2021 val 503 pool 2524"
+    },
+    {
+      "check": "excluded absent",
+      "passed": true,
+      "detail": "three excluded paths are in neither manifest"
+    },
+    {
+      "check": "excluded files remain on disk",
+      "passed": true,
+      "detail": "original files were not deleted"
+    },
+    {
+      "check": "no shared SHA-256",
+      "passed": true,
+      "detail": "shared 0"
+    },
+    {
+      "check": "each SHA-256 once",
+      "passed": true,
+      "detail": "kept exact-duplicate hashes appear once"
+    },
+    {
+      "check": "groups stay together",
+      "passed": true,
+      "detail": "8 groups"
+    },
+    {
+      "check": "validation size rule",
+      "passed": true,
+      "detail": "int(0.2 * units), last units after Random(42)"
+    },
+    {
+      "check": "six classes",
+      "passed": true,
+      "detail": "cardboard,glass,metal,paper,plastic,trash"
+    },
+    {
+      "check": "register complete",
+      "passed": true,
+      "detail": "139 HUMAN_CONFIRMED rows"
+    }
+  ]
+}

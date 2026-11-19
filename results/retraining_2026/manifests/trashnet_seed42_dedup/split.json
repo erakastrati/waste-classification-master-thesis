@@ -1,0 +1,178 @@
+{
+  "experiments": [
+    "EXP-003",
+    "EXP-004"
+  ],
+  "directory": "results/retraining_2026/manifests/trashnet_seed42_dedup",
+  "previous_manifest": "results/retraining_2026/manifests/trashnet_seed42",
+  "seed": 42,
+  "rng": "CPython random.Random, constructed again for each class",
+  "python": "3.9.21 (main, Dec  3 2024, 17:50:13) \n[Clang 16.0.0 (clang-1600.0.26.4)]",
+  "rounding": "validation units = int(0.2 * class_units); those are the last units after the shuffle",
+  "selection_rule": "for each visual_duplicate pair, retain the lexicographically smaller repo-relative path",
+  "label_exclusions": [
+    "data/trashNet-dataset/glass/glass176.jpg",
+    "data/trashNet-dataset/metal/metal91.jpg",
+    "data/trashNet-dataset/plastic/plastic332.jpg"
+  ],
+  "visual_omissions": [
+    "data/trashNet-dataset/metal/metal57.jpg",
+    "data/trashNet-dataset/paper/paper108.jpg",
+    "data/trashNet-dataset/paper/paper284.jpg",
+    "data/trashNet-dataset/paper/paper390.jpg",
+    "data/trashNet-dataset/paper/paper40.jpg",
+    "data/trashNet-dataset/paper/paper451.jpg",
+    "data/trashNet-dataset/paper/paper99.jpg"
+  ],
+  "p038_paths": [
+    "data/trashNet-dataset/metal/metal149.jpg",
+    "data/trashNet-dataset/metal/metal9.jpg"
+  ],
+  "per_class": {
+    "cardboard": {
+      "disk_files": 403,
+      "inventory_files": 403,
+      "units": 403,
+      "train_units": 323,
+      "val_units": 80,
+      "train_files": 323,
+      "val_files": 80
+    },
+    "glass": {
+      "disk_files": 501,
+      "inventory_files": 500,
+      "units": 500,
+      "train_units": 400,
+      "val_units": 100,
+      "train_files": 400,
+      "val_files": 100
+    },
+    "metal": {
+      "disk_files": 410,
+      "inventory_files": 408,
+      "units": 407,
+      "train_units": 326,
+      "val_units": 81,
+      "train_files": 327,
+      "val_files": 81
+    },
+    "paper": {
+      "disk_files": 594,
+      "inventory_files": 588,
+      "units": 588,
+      "train_units": 471,
+      "val_units": 117,
+      "train_files": 471,
+      "val_files": 117
+    },
+    "plastic": {
+      "disk_files": 482,
+      "inventory_files": 481,
+      "units": 481,
+      "train_units": 385,
+      "val_units": 96,
+      "train_files": 385,
+      "val_files": 96
+    },
+    "trash": {
+      "disk_files": 137,
+      "inventory_files": 137,
+      "units": 137,
+      "train_units": 110,
+      "val_units": 27,
+      "train_files": 110,
+      "val_files": 27
+    }
+  },
+  "inventory_files": 2517,
+  "train_files": 2016,
+  "val_files": 501,
+  "register_sha256": "0e3227fab6704e597f24c93433671e48f0614dd7629fc37de9ea31cff57a0972",
+  "train_txt_sha256": "bc768a67584e2be3b758a3390de3d90ffb3c4bb90b27e158e422dcf1d468e549",
+  "val_txt_sha256": "b4b344db8ac6e2cc99199ac12754b8fe951ff8c2cf0d36e14e88bb567a022cb5",
+  "previous_train_txt_sha256": "89380f2fc59ee5063a0383903225779b7b3659528376815941313197d5cf42ea",
+  "previous_val_txt_sha256": "b6f18ad2baec2b11ee4abd552af043037dfd16015c502eebb5a15b453d1b35c2",
+  "movement": [],
+  "checks": [
+    {
+      "check": "inventory size",
+      "passed": true,
+      "detail": "2517"
+    },
+    {
+      "check": "train size",
+      "passed": true,
+      "detail": "2016"
+    },
+    {
+      "check": "validation size",
+      "passed": true,
+      "detail": "501"
+    },
+    {
+      "check": "class counts",
+      "passed": true,
+      "detail": "cardboard 323/80, glass 400/100, metal 327/81, paper 471/117, plastic 385/96, trash 110/27"
+    },
+    {
+      "check": "path overlap",
+      "passed": true,
+      "detail": "0"
+    },
+    {
+      "check": "SHA-256 overlap",
+      "passed": true,
+      "detail": "no hash on both sides"
+    },
+    {
+      "check": "each SHA-256 once",
+      "passed": true,
+      "detail": "kept exact-duplicate hashes appear once"
+    },
+    {
+      "check": "P038 same split",
+      "passed": true,
+      "detail": "train"
+    },
+    {
+      "check": "no same-object overlap",
+      "passed": true,
+      "detail": "P038 is the only confirmed same-object group"
+    },
+    {
+      "check": "review preserved",
+      "passed": true,
+      "detail": "0e3227fab6704e597f24c93433671e48f0614dd7629fc37de9ea31cff57a0972"
+    },
+    {
+      "check": "139 decisions",
+      "passed": true,
+      "detail": "P001\u2013P139 HUMAN_CONFIRMED"
+    },
+    {
+      "check": "no unexpected moves",
+      "passed": true,
+      "detail": "[]"
+    },
+    {
+      "check": "no unexpected additions",
+      "passed": true,
+      "detail": "[]"
+    },
+    {
+      "check": "omissions absent",
+      "passed": true,
+      "detail": "[]"
+    },
+    {
+      "check": "matches previous lists minus omissions",
+      "passed": true,
+      "detail": "dedup partition equals trashnet_seed42 with seven paths removed"
+    },
+    {
+      "check": "source files remain",
+      "passed": true,
+      "detail": "omitted files were not deleted"
+    }
+  ]
+}

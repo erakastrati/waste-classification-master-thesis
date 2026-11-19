@@ -1,0 +1,11 @@
+path,reason,pair_id,retained_path,on_disk
+data/trashNet-dataset/glass/glass176.jpg,conflicting-label exact duplicate,P001,data/trashNet-dataset/plastic/plastic152.jpg,yes
+data/trashNet-dataset/metal/metal91.jpg,conflicting-label exact duplicate,P139,data/trashNet-dataset/glass/glass115.jpg,yes
+data/trashNet-dataset/plastic/plastic332.jpg,conflicting-label exact duplicate,P002,data/trashNet-dataset/glass/glass389.jpg,yes
+data/trashNet-dataset/paper/paper390.jpg,redundant visually identical copy; lexicographically larger path,P003,data/trashNet-dataset/paper/paper185.jpg,yes
+data/trashNet-dataset/paper/paper108.jpg,redundant visually identical copy; lexicographically larger path,P004,data/trashNet-dataset/paper/paper101.jpg,yes
+data/trashNet-dataset/paper/paper284.jpg,redundant visually identical copy; lexicographically larger path,P005,data/trashNet-dataset/paper/paper180.jpg,yes
+data/trashNet-dataset/paper/paper451.jpg,redundant visually identical copy; lexicographically larger path,P006,data/trashNet-dataset/paper/paper345.jpg,yes
+data/trashNet-dataset/paper/paper99.jpg,redundant visually identical copy; lexicographically larger path,P007,data/trashNet-dataset/paper/paper147.jpg,yes
+data/trashNet-dataset/paper/paper40.jpg,redundant visually identical copy; lexicographically larger path,P037,data/trashNet-dataset/paper/paper2.jpg,yes
+data/trashNet-dataset/metal/metal57.jpg,redundant visually identical copy; lexicographically larger path,P039,data/trashNet-dataset/metal/metal122.jpg,yes

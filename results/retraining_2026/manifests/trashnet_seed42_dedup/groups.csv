@@ -1,0 +1,9 @@
+group_id,pair_id,decision,class_name,split,paths
+GRP-P038,P038,same_object_different_photo,metal,train,data/trashNet-dataset/metal/metal149.jpg|data/trashNet-dataset/metal/metal9.jpg
+GRP-P003,P003,visual_duplicate_one_retained,paper,val,data/trashNet-dataset/paper/paper185.jpg
+GRP-P004,P004,visual_duplicate_one_retained,paper,train,data/trashNet-dataset/paper/paper101.jpg
+GRP-P005,P005,visual_duplicate_one_retained,paper,val,data/trashNet-dataset/paper/paper180.jpg
+GRP-P006,P006,visual_duplicate_one_retained,paper,train,data/trashNet-dataset/paper/paper345.jpg
+GRP-P007,P007,visual_duplicate_one_retained,paper,train,data/trashNet-dataset/paper/paper147.jpg
+GRP-P037,P037,visual_duplicate_one_retained,paper,train,data/trashNet-dataset/paper/paper2.jpg
+GRP-P039,P039,visual_duplicate_one_retained,metal,train,data/trashNet-dataset/metal/metal122.jpg

@@ -1,0 +1,7 @@
+class_name,disk_files,excluded_files,inventory_files,units,train_units,val_units,train_files,val_files
+cardboard,403,0,403,403,323,80,323,80
+glass,501,1,500,500,400,100,400,100
+metal,410,1,409,407,326,81,328,81
+paper,594,0,594,588,471,117,475,119
+plastic,482,1,481,481,385,96,385,96
+trash,137,0,137,137,110,27,110,27

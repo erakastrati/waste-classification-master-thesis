@@ -1,30 +1,30 @@
 """
 evaluate_final_model.py  —  Final evaluation: EfficientNetB0 + Garbage v2 (EXP-011) + TTA
 
-Runs the actual deployed model (efficientnet_garbage_best.keras) with the same
-5-view TTA used by app.py, over the full real_test_dataset (600 photos, ✅-prefixed
-class folders), and produces everything needed for thesis Chapter 4.8/4.9:
+Runs the saved model (efficientnet_garbage_best.keras) with the same 5-view TTA
+used by app.py, over data/real_test_dataset (the current held-out set).
 
-  - results/final_model_eval/confusion_matrix.png       (6x6 confusion matrix)
-  - results/final_model_eval/classification_report.txt  (precision/recall/F1 per class)
-  - results/final_model_eval/misclassified.txt          (full error list, TTA mode)
-  - results/final_model_eval/summary.txt                (headline numbers)
+Results are written only to results/final_held_out_evaluation/.
+The historical results/final_model_eval/ directory is not touched.
 
 Run from project root:
     ./venv/bin/python -m src.evaluation.evaluate_final_model
 """
 
 import os
+import time
 import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
 
-from PIL import Image
+from PIL import Image, ImageOps
 from sklearn.metrics import (
     confusion_matrix,
     classification_report,
     accuracy_score,
     f1_score,
+    precision_score,
+    recall_score,
 )
 from tensorflow.keras.models import load_model
 
@@ -34,11 +34,15 @@ MODEL_PATH   = "results/efficientnet_garbage/efficientnet_garbage_best.keras"
 DATASET_PATH = "data/real_test_dataset"
 IMAGE_SIZE   = (224, 224)
 CLASS_NAMES  = ["cardboard", "glass", "metal", "paper", "plastic", "trash"]
-OUTPUT_DIR   = "results/final_model_eval"
+OUTPUT_DIR   = "results/final_held_out_evaluation"
 
 # The real_test_dataset folders are prefixed with a checkmark emoji (✅cardboard, ...).
 FOLDER_PREFIXES = ["", "✅"]
 
+if os.path.exists(os.path.join(OUTPUT_DIR, "summary.txt")):
+    raise SystemExit(
+        f"STOP: {OUTPUT_DIR}/summary.txt already exists; refusing to overwrite"
+    )
 os.makedirs(OUTPUT_DIR, exist_ok=True)
 
 
@@ -51,7 +55,7 @@ def resolve_class_dir(dataset_path, cls):
 
 
 def load_dataset():
-    images, labels, paths = [], [], []
+    images, labels, paths, exif_rows = [], [], [], []
     for label_idx, cls in enumerate(CLASS_NAMES):
         cls_dir = resolve_class_dir(DATASET_PATH, cls)
         if cls_dir is None:
@@ -61,29 +65,45 @@ def load_dataset():
             if not fname.lower().endswith((".jpg", ".jpeg", ".png", ".webp")):
                 continue
             path = os.path.join(cls_dir, fname)
-            images.append(Image.open(path).convert("RGB"))
+            with Image.open(path) as raw:
+                orientation = raw.getexif().get(274, 1)
+                stored_size = raw.size
+                upright = ImageOps.exif_transpose(raw).convert("RGB")
+            images.append(upright)
             labels.append(label_idx)
             paths.append(path)
-    return images, np.array(labels), paths
+            exif_rows.append((path, orientation, stored_size, upright.size))
+    return images, np.array(labels), paths, exif_rows
 
 
 print("Loading final model (EXP-011: EfficientNetB0 + Garbage v2 FT)...")
 model = load_model(MODEL_PATH)
 
 print("Loading real-world test set (600 photos)...")
-images, y_true, paths = load_dataset()
+images, y_true, paths, exif_rows = load_dataset()
 print(f"Images loaded: {len(images)}")
+n_rotated = sum(1 for _, orientation, _, _ in exif_rows if orientation != 1)
+n_size_changed = sum(1 for _, _, stored, upright in exif_rows if stored != upright)
+print(f"EXIF orientation not 1: {n_rotated}; size changed by transpose: {n_size_changed}")
+with open(f"{OUTPUT_DIR}/exif_orientation.txt", "w") as f:
+    f.write("EXIF correction is applied in memory by ImageOps.exif_transpose before RGB conversion.\n")
+    f.write("Original JPEG files are not modified.\n")
+    f.write(f"images={len(exif_rows)} orientation_not_1={n_rotated} stored_size_changed={n_size_changed}\n")
 
 print("Running TTA inference (5 views per image)...")
 y_pred = []
 confidences = []
+infer_ms = []
 for i, img in enumerate(images):
     if (i + 1) % 50 == 0:
         print(f"  [{i + 1}/{len(images)}]")
+    t0 = time.perf_counter()
     probs = predict_with_tta(model, img, IMAGE_SIZE)
+    infer_ms.append((time.perf_counter() - t0) * 1000)
     pred_idx = int(np.argmax(probs))
     y_pred.append(pred_idx)
     confidences.append(float(probs[pred_idx]))
+infer_ms = np.array(infer_ms)
 
 y_pred = np.array(y_pred)
 confidences = np.array(confidences)
@@ -93,18 +113,24 @@ confidences = np.array(confidences)
 # ==========================================
 
 acc = accuracy_score(y_true, y_pred)
-macro_f1 = f1_score(y_true, y_pred, average="macro")
+macro_f1 = f1_score(y_true, y_pred, average="macro", zero_division=0)
+macro_precision = precision_score(y_true, y_pred, average="macro", zero_division=0)
+macro_recall = recall_score(y_true, y_pred, average="macro", zero_division=0)
 n_correct = int(np.sum(y_true == y_pred))
 n_errors = len(y_true) - n_correct
 
 summary_lines = [
+    "NEW held-out dataset (not the historical real_test_dataset that produced 92.17%).",
     "Final model: EfficientNetB0 + Garbage v2 Fine-tune (EXP-011) + TTA (5 views)",
     f"Model file:  {MODEL_PATH}",
     f"Dataset:     {DATASET_PATH} (n={len(y_true)})",
+    "EXIF orientation applied in memory with ImageOps.exif_transpose; JPEG files unchanged.",
     "",
-    f"Accuracy:  {n_correct}/{len(y_true)} = {acc*100:.2f}%",
-    f"Errors:    {n_errors}",
-    f"Macro F1:  {macro_f1:.4f}",
+    f"Accuracy:   {n_correct}/{len(y_true)} = {acc*100:.2f}%",
+    f"Errors:     {n_errors}",
+    f"Precision:  {macro_precision:.4f} (macro)",
+    f"Recall:     {macro_recall:.4f} (macro)",
+    f"Macro F1:   {macro_f1:.4f}",
 ]
 summary_text = "\n".join(summary_lines)
 print("\n" + "=" * 50)
@@ -113,6 +139,34 @@ print("=" * 50)
 
 with open(f"{OUTPUT_DIR}/summary.txt", "w") as f:
     f.write(summary_text + "\n")
+
+# Single-image latency, same protocol as benchmark_inference.py
+# (10 warmup + 100 timed batch-1 predicts). Written only in this directory.
+from tensorflow.keras.applications.efficientnet import preprocess_input as efficientnet_preprocess
+sample = np.array(images[0].resize(IMAGE_SIZE), dtype=np.float32)
+batch = np.expand_dims(efficientnet_preprocess(sample.copy()), axis=0)
+for _ in range(10):
+    model.predict(batch, verbose=0)
+single_ms = []
+for _ in range(100):
+    t0 = time.perf_counter()
+    model.predict(batch, verbose=0)
+    single_ms.append((time.perf_counter() - t0) * 1000)
+single_ms = np.array(single_ms)
+infer_lines = [
+    "Inference timing for the NEW held-out evaluation.",
+    "TTA times are the actual 5-view calls on all 600 photographs.",
+    "Single-pass times follow benchmark_inference.py: 10 warmup + 100 runs, batch=1, one image.",
+    f"sample_image={paths[0]}",
+    "",
+    f"TTA per image: mean={infer_ms.mean():.2f} ms  std={infer_ms.std():.2f}  median={np.median(infer_ms):.2f}  n={len(infer_ms)}",
+    f"TTA total: {infer_ms.sum()/1000:.1f} s",
+    f"Single-pass: mean={single_ms.mean():.2f} ms  std={single_ms.std():.2f}  median={np.median(single_ms):.2f}  n=100",
+    f"Single-pass x5 (estimate of TTA): {single_ms.mean()*5:.2f} ms",
+]
+with open(f"{OUTPUT_DIR}/inference_time.txt", "w") as f:
+    f.write("\n".join(infer_lines) + "\n")
+print("\n".join(infer_lines))
 
 # ==========================================
 # Classification report (precision/recall/F1 per class)
@@ -128,6 +182,16 @@ print("\n" + report)
 # ==========================================
 
 cm = confusion_matrix(y_true, y_pred)
+per_prec = precision_score(y_true, y_pred, average=None, zero_division=0, labels=range(len(CLASS_NAMES)))
+per_rec = recall_score(y_true, y_pred, average=None, zero_division=0, labels=range(len(CLASS_NAMES)))
+per_f1 = f1_score(y_true, y_pred, average=None, zero_division=0, labels=range(len(CLASS_NAMES)))
+with open(f"{OUTPUT_DIR}/per_class_metrics.csv", "w") as f:
+    f.write("class,n,correct,accuracy,precision,recall,f1\n")
+    for i, cls in enumerate(CLASS_NAMES):
+        n_i = int(cm[i].sum())
+        correct_i = int(cm[i, i])
+        acc_i = correct_i / n_i if n_i else 0.0
+        f.write(f"{cls},{n_i},{correct_i},{acc_i:.4f},{per_prec[i]:.4f},{per_rec[i]:.4f},{per_f1[i]:.4f}\n")
 plt.figure(figsize=(8, 6))
 sns.heatmap(
     cm, annot=True, fmt="d", cmap="Blues",

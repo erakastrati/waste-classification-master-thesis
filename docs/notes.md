@@ -470,8 +470,10 @@ Artifacts:
 ## Initial Real-World Testing — v1 Dataset (78 photos, 13/class)
 
 Note: EXP-001 through EXP-010 were evaluated on a smaller real-world test set (78 photos,
-13 images per class). After expanding the dataset to 600 photos (v2, 100/class), only
-4 key models were re-evaluated on v2 for a fair cross-model comparison (see end of document).
+13 images per class). After expanding the dataset to 600 photos (v2, 100/class), the
+saved models were re-evaluated on v2 so Table 19 compares them on the same set
+(see end of document). EXP-011 was not scored on v1: those 78 photos were replaced
+in place and were not kept.
 
 Dataset (v1): 78 real-world photos taken with iPhone (13 per class)
 Classes: cardboard, glass, metal, paper, plastic, trash
@@ -1216,20 +1218,22 @@ v2 dataset for all models to ensure fair comparison.
 Note on real-world columns:
 - v1 = 78 photos (13/class) — used during development for EXP-001 through EXP-010
 - v2 = 600 photos (100/class) — final curated dataset, more statistically reliable
-- "—" = not re-evaluated on v2 (baseline or negative result; v1 results in earlier sections)
+- RW v2 was measured on 27 Oct 2026 for every saved model (single-pass, same preprocessing as evaluate_real_world.py). EXP-006 is the TACO model after rembg. EXP-010 is the 3-model ensemble with 5-view TTA.
+- EXP-011 has no RW v1 score: the 78 photos were replaced in place when v2 was built and were not archived
+- EXP-012 has no real-world score: it is a TrashNet hyperparameter study, not a classifier
 
 | ID      | Model                          | TrashNet Val | Real-World v1 (78) | Real-World v2 (600) | Status      |
 |---------|-------------------------------|-------------|---------------------|---------------------|-------------|
-| EXP-001 | CNN Baseline (from scratch)    |   56.44%    |       11.54%        |         —           | Completed   |
-| EXP-002 | MobileNetV2 (TL)               |   87.13%    |       43.59%        |         —           | Completed   |
+| EXP-001 | CNN Baseline (from scratch)    |   56.44%    |       11.54%        |       32.00%        | Completed   |
+| EXP-002 | MobileNetV2 (TL)               |   87.13%    |       43.59%        |       74.33%        | Completed   |
 | EXP-003 | EfficientNetB0 (TL)            |   89.90%    |       39.74%        |       78.33%        | Completed   |
 | EXP-004 | EfficientNetB0 + Augmentation  |   89.70%    |       50.00%        |       82.67%        | Completed   |
-| EXP-005 | EfficientNetB0 + TACO FT       |   92.87%    |       52.56%        |         —           | Completed   |
-| EXP-006 | EfficientNetB0 + rembg (PP)    |      —      |       50.00%        |         —           | Neg. result |
-| EXP-007 | EfficientNetB0 + RealWaste FT  |   91.29%    |       55.13%        |         —           | Completed   |
+| EXP-005 | EfficientNetB0 + TACO FT       |   92.87%    |       52.56%        |       82.67%        | Completed   |
+| EXP-006 | EfficientNetB0 + rembg (PP)    |      —      |       50.00%        |       74.33%        | Neg. result |
+| EXP-007 | EfficientNetB0 + RealWaste FT  |   91.29%    |       55.13%        |       83.83%        | Completed   |
 | EXP-008 | EfficientNetB0 + Household FT  |   90.50%    |       57.69%        |       88.83%        | Completed   |
 | EXP-009 | EfficientNetB0 + TTA           |   90.50%    |       62.82%        |       88.83%        | Completed   |
-| EXP-010 | Ensemble (3 models + TTA)      |   90.50%    |       58.97%        |         —           | Neg. result |
+| EXP-010 | Ensemble (3 models + TTA)      |   90.50%    |       58.97%        |       86.50%        | Neg. result |
 | EXP-011 | EfficientNetB0 + Garbage v2 FT |   89.90%    |          —          |    **92.17%**       | **BEST**    |
 | EXP-012 | Hyperparameter Analysis        |  See above  |          —          |         —           | Completed   |
 

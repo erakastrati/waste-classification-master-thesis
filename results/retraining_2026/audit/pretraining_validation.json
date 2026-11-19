@@ -1,0 +1,179 @@
+{
+  "passed": true,
+  "checks": [
+    {
+      "check": "train count",
+      "passed": true,
+      "detail": "2016"
+    },
+    {
+      "check": "val count",
+      "passed": true,
+      "detail": "501"
+    },
+    {
+      "check": "class counts",
+      "passed": true,
+      "detail": "train {'cardboard': 323, 'glass': 400, 'metal': 327, 'paper': 471, 'plastic': 385, 'trash': 110} val {'cardboard': 80, 'glass': 100, 'metal': 81, 'paper': 117, 'plastic': 96, 'trash': 27}"
+    },
+    {
+      "check": "label range",
+      "passed": true,
+      "detail": "indices 0-5 match parent folders"
+    },
+    {
+      "check": "path overlap",
+      "passed": true,
+      "detail": "0"
+    },
+    {
+      "check": "excluded files absent",
+      "passed": true,
+      "detail": "[]"
+    },
+    {
+      "check": "P038 stays in training",
+      "passed": true,
+      "detail": "[]"
+    },
+    {
+      "check": "SHA-256 overlap",
+      "passed": true,
+      "detail": "[]"
+    },
+    {
+      "check": "no repeated file hash",
+      "passed": true,
+      "detail": "[]"
+    },
+    {
+      "check": "same split for both experiments",
+      "passed": true,
+      "detail": "both experiments read trashnet_seed42_dedup"
+    },
+    {
+      "check": "batch shapes",
+      "passed": true,
+      "detail": "train (32, 224, 224, 3) float32 val (32, 224, 224, 3) partial (21, 224, 224, 3)"
+    },
+    {
+      "check": "pixels stay in 0-255",
+      "passed": true,
+      "detail": "train min 0.000 max 255.000"
+    },
+    {
+      "check": "one image per class",
+      "passed": true,
+      "detail": "{'cardboard': [224, 224, 3, 'float32'], 'glass': [224, 224, 3, 'float32'], 'metal': [224, 224, 3, 'float32'], 'paper': [224, 224, 3, 'float32'], 'plastic': [224, 224, 3, 'float32'], 'trash': [224, 224, 3, 'float32']}"
+    },
+    {
+      "check": "six run slots",
+      "passed": true,
+      "detail": "experiments/EXP-003/runs/seed_42/, experiments/EXP-003/runs/seed_123/, experiments/EXP-003/runs/seed_456/, experiments/EXP-004/runs/seed_42/, experiments/EXP-004/runs/seed_123/, experiments/EXP-004/runs/seed_456/"
+    },
+    {
+      "check": "EXP-003 phase 1 checkpoint",
+      "passed": true,
+      "detail": "/Users/erakastrati/Desktop/WasteClassification/waste-classification-master-thesis/experiments/EXP-003/runs/seed_42/phase1_best.keras"
+    },
+    {
+      "check": "EXP-003 phase 2 checkpoint",
+      "passed": true,
+      "detail": "/Users/erakastrati/Desktop/WasteClassification/waste-classification-master-thesis/experiments/EXP-003/runs/seed_42/phase2_best.keras"
+    },
+    {
+      "check": "EXP-004 phase 1 checkpoint",
+      "passed": true,
+      "detail": "/Users/erakastrati/Desktop/WasteClassification/waste-classification-master-thesis/experiments/EXP-004/runs/seed_42/phase1_best.keras"
+    },
+    {
+      "check": "EXP-004 phase 2 checkpoint",
+      "passed": true,
+      "detail": "/Users/erakastrati/Desktop/WasteClassification/waste-classification-master-thesis/experiments/EXP-004/runs/seed_42/phase2_best.keras"
+    },
+    {
+      "check": "EXP-003 has no augmentation",
+      "passed": true,
+      "detail": "[]"
+    },
+    {
+      "check": "base call has no training keyword",
+      "passed": true,
+      "detail": "{'mask': None}"
+    },
+    {
+      "check": "EXP-003 phase 1 freezes the base",
+      "passed": true,
+      "detail": "bn 49 lr 0.0010000000474974513"
+    },
+    {
+      "check": "EXP-003 inference forward pass",
+      "passed": true,
+      "detail": "shape (32, 6)"
+    },
+    {
+      "check": "EXP-003 phase 2 freezes every batch norm",
+      "passed": true,
+      "detail": "trainable bn [] prefix []"
+    },
+    {
+      "check": "EXP-004 augmentation settings",
+      "passed": true,
+      "detail": "contrast (0, 0.2) rotation (-0.15, 0.15)"
+    },
+    {
+      "check": "EXP-004 augmentation is training-only",
+      "passed": true,
+      "detail": "inference max abs diff 0.000000"
+    },
+    {
+      "check": "EXP-004 phase 2 uses the same batch-norm freeze",
+      "passed": true,
+      "detail": "bn trainable []"
+    },
+    {
+      "check": "seeds 42 and 123 change initialization",
+      "passed": true,
+      "detail": "kernel (1280, 128)"
+    },
+    {
+      "check": "EXP-005 still loads the historical checkpoint",
+      "passed": true,
+      "detail": "train_taco_finetune.py line unchanged"
+    },
+    {
+      "check": "pipeline does not call validation_split",
+      "passed": true,
+      "detail": "src/retraining has neither call"
+    },
+    {
+      "check": "historical files unchanged",
+      "passed": true,
+      "detail": "[]"
+    }
+  ],
+  "train_class_counts": {
+    "cardboard": 323,
+    "glass": 400,
+    "metal": 327,
+    "paper": 471,
+    "plastic": 385,
+    "trash": 110
+  },
+  "val_class_counts": {
+    "cardboard": 80,
+    "glass": 100,
+    "metal": 81,
+    "paper": 117,
+    "plastic": 96,
+    "trash": 27
+  },
+  "planned_runs": [
+    "experiments/EXP-003/runs/seed_42/",
+    "experiments/EXP-003/runs/seed_123/",
+    "experiments/EXP-003/runs/seed_456/",
+    "experiments/EXP-004/runs/seed_42/",
+    "experiments/EXP-004/runs/seed_123/",
+    "experiments/EXP-004/runs/seed_456/"
+  ]
+}

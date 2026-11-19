@@ -1,0 +1,10 @@
+pair_id,decision,retain_path,omit_path,current_split,selection_rule,applied
+P003,visual_duplicate,data/trashNet-dataset/paper/paper185.jpg,data/trashNet-dataset/paper/paper390.jpg,validation,lexicographically smaller repo-relative path,yes
+P004,visual_duplicate,data/trashNet-dataset/paper/paper101.jpg,data/trashNet-dataset/paper/paper108.jpg,training,lexicographically smaller repo-relative path,yes
+P005,visual_duplicate,data/trashNet-dataset/paper/paper180.jpg,data/trashNet-dataset/paper/paper284.jpg,validation,lexicographically smaller repo-relative path,yes
+P006,visual_duplicate,data/trashNet-dataset/paper/paper345.jpg,data/trashNet-dataset/paper/paper451.jpg,training,lexicographically smaller repo-relative path,yes
+P007,visual_duplicate,data/trashNet-dataset/paper/paper147.jpg,data/trashNet-dataset/paper/paper99.jpg,training,lexicographically smaller repo-relative path,yes
+P037,visual_duplicate,data/trashNet-dataset/paper/paper2.jpg,data/trashNet-dataset/paper/paper40.jpg,training,lexicographically smaller repo-relative path,yes
+P039,visual_duplicate,data/trashNet-dataset/metal/metal122.jpg,data/trashNet-dataset/metal/metal57.jpg,training,lexicographically smaller repo-relative path,yes
+P038,same_object_different_photo,data/trashNet-dataset/metal/metal149.jpg,,training,keep both photographs in the same split,yes
+P038,same_object_different_photo,data/trashNet-dataset/metal/metal9.jpg,,training,keep both photographs in the same split,yes

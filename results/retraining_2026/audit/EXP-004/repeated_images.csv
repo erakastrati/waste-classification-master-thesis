@@ -1,0 +1,48 @@
+path,filename,class,split,membership,n_pairs,pair_ids,pdf_pages
+data/trashNet-dataset/paper/paper110.jpg,paper110.jpg,paper,val,validation,17,P008 P013 P058 P074 P077 P082 P089 P095 P106 P108 P111 P123 P127 P130 P132 P135 P136,6 8 33 40 41 43 46 48 52 53 54 59 61 62 63 64 64
+data/trashNet-dataset/paper/paper385.jpg,paper385.jpg,paper,val,validation,12,P009 P017 P020 P021 P059 P060 P065 P075 P076 P091 P117 P137,6 10 12 12 33 34 36 40 41 47 57 65
+data/trashNet-dataset/paper/paper477.jpg,paper477.jpg,paper,val,validation,12,P011 P014 P025 P044 P048 P051 P052 P054 P078 P101 P102 P122,7 9 14 27 29 30 31 31 42 50 51 59
+data/trashNet-dataset/paper/paper347.jpg,paper347.jpg,paper,val,validation,9,P012 P062 P068 P083 P086 P087 P103 P116 P121,8 35 38 44 45 45 51 56 58
+data/trashNet-dataset/paper/paper50.jpg,paper50.jpg,paper,val,validation,9,P018 P019 P024 P050 P055 P069 P092 P104 P128,11 11 14 30 32 38 47 52 61
+data/trashNet-dataset/paper/paper52.jpg,paper52.jpg,paper,val,validation,9,P043 P045 P049 P064 P066 P067 P073 P119 P126,27 28 29 36 37 37 39 57 60
+data/trashNet-dataset/glass/glass15.jpg,glass15.jpg,glass,val,validation,7,P057 P071 P080 P085 P088 P093 P138,67 67 68 69 69 70 75
+data/trashNet-dataset/glass/glass183.jpg,glass183.jpg,glass,val,validation,7,P016 P034 P046 P097 P107 P113 P125,10 19 66 71 72 72 73
+data/trashNet-dataset/glass/glass3.jpg,glass3.jpg,glass,val,validation,7,P031 P053 P072 P094 P105 P118 P133,17 66 68 70 71 73 74
+data/trashNet-dataset/paper/paper239.jpg,paper239.jpg,paper,train,training,7,P023 P035 P050 P052 P065 P112 P130,13 19 30 31 36 55 62
+data/trashNet-dataset/paper/paper444.jpg,paper444.jpg,paper,train,training,7,P022 P036 P044 P055 P060 P095 P100,13 20 27 32 34 48 50
+data/trashNet-dataset/cardboard/cardboard83.jpg,cardboard83.jpg,cardboard,train,training,6,P008 P011 P012 P018 P030 P124,6 7 8 11 17 60
+data/trashNet-dataset/paper/paper493.jpg,paper493.jpg,paper,val,validation,6,P015 P027 P100 P112 P129 P134,9 15 50 55 62 63
+data/trashNet-dataset/paper/paper567.jpg,paper567.jpg,paper,train,training,6,P032 P056 P096 P120 P126 P137,18 32 48 58 60 65
+data/trashNet-dataset/paper/paper204.jpg,paper204.jpg,paper,train,training,5,P048 P069 P091 P129 P136,29 38 47 62 64
+data/trashNet-dataset/paper/paper98.jpg,paper98.jpg,paper,val,validation,5,P061 P079 P096 P110 P114,34 42 48 54 55
+data/trashNet-dataset/glass/glass4.jpg,glass4.jpg,glass,train,training,4,P053 P088 P097 P131,66 69 71 74
+data/trashNet-dataset/paper/paper203.jpg,paper203.jpg,paper,train,training,4,P047 P066 P070 P084,28 37 39 44
+data/trashNet-dataset/paper/paper317.jpg,paper317.jpg,paper,train,training,4,P051 P076 P092 P134,30 41 47 63
+data/trashNet-dataset/paper/paper499.jpg,paper499.jpg,paper,val,validation,4,P056 P081 P084 P098,32 43 44 49
+data/trashNet-dataset/paper/paper539.jpg,paper539.jpg,paper,val,validation,4,P047 P090 P099 P115,28 46 49 56
+data/trashNet-dataset/cardboard/cardboard235.jpg,cardboard235.jpg,cardboard,train,training,3,P009 P027 P033,6 15 18
+data/trashNet-dataset/glass/glass187.jpg,glass187.jpg,glass,train,training,3,P071 P113 P133,67 72 74
+data/trashNet-dataset/glass/glass188.jpg,glass188.jpg,glass,train,training,3,P057 P105 P107,67 71 72
+data/trashNet-dataset/glass/glass5.jpg,glass5.jpg,glass,train,training,3,P046 P072 P093,66 68 70
+data/trashNet-dataset/paper/paper431.jpg,paper431.jpg,paper,train,training,3,P049 P061 P109,29 34 53
+data/trashNet-dataset/paper/paper438.jpg,paper438.jpg,paper,train,training,3,P045 P079 P115,28 42 56
+data/trashNet-dataset/paper/paper498.jpg,paper498.jpg,paper,train,training,3,P054 P059 P104,31 33 52
+data/trashNet-dataset/paper/paper552.jpg,paper552.jpg,paper,train,training,3,P028 P058 P062,16 33 35
+data/trashNet-dataset/paper/paper78.jpg,paper78.jpg,paper,val,validation,3,P063 P070 P109,35 39 53
+data/trashNet-dataset/plastic/plastic438.jpg,plastic438.jpg,plastic,val+ftval,validation; also unshuffled fine-tune validation,3,P022 P030 P035,13 17 19
+data/trashNet-dataset/cardboard/cardboard296.jpg,cardboard296.jpg,cardboard,train,training,2,P013 P024,8 14
+data/trashNet-dataset/cardboard/cardboard355.jpg,cardboard355.jpg,cardboard,val,validation,2,P028 P124,16 60
+data/trashNet-dataset/cardboard/cardboard387.jpg,cardboard387.jpg,cardboard,train,training,2,P015 P019,9 11
+data/trashNet-dataset/glass/glass12.jpg,glass12.jpg,glass,train,training,2,P080 P118,68 73
+data/trashNet-dataset/glass/glass13.jpg,glass13.jpg,glass,train,training,2,P094 P138,70 75
+data/trashNet-dataset/paper/paper119.jpg,paper119.jpg,paper,train,training,2,P068 P111,38 54
+data/trashNet-dataset/paper/paper132.jpg,paper132.jpg,paper,train,training,2,P108 P116,53 56
+data/trashNet-dataset/paper/paper220.jpg,paper220.jpg,paper,train,training,2,P064 P090,36 46
+data/trashNet-dataset/paper/paper228.jpg,paper228.jpg,paper,train,training,2,P117 P122,57 59
+data/trashNet-dataset/paper/paper361.jpg,paper361.jpg,paper,train,training,2,P016 P031,10 17
+data/trashNet-dataset/paper/paper373.jpg,paper373.jpg,paper,train,training,2,P075 P078,40 42
+data/trashNet-dataset/paper/paper497.jpg,paper497.jpg,paper,train,training,2,P103 P135,51 64
+data/trashNet-dataset/paper/paper54.jpg,paper54.jpg,paper,train,training,2,P087 P127,45 61
+data/trashNet-dataset/paper/paper557.jpg,paper557.jpg,paper,train,training,2,P086 P106,45 52
+data/trashNet-dataset/paper/paper582.jpg,paper582.jpg,paper,train,training,2,P074 P083,40 44
+data/trashNet-dataset/plastic/plastic367.jpg,plastic367.jpg,plastic,val+ftval,validation; also unshuffled fine-tune validation,2,P023 P036,13 20

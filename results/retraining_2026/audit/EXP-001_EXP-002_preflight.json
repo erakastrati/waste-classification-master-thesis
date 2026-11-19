@@ -1,0 +1,215 @@
+{
+  "passed": true,
+  "checks": [
+    {
+      "check": "manifest hashes",
+      "passed": true,
+      "detail": "trashnet_seed42_dedup train.txt and val.txt"
+    },
+    {
+      "check": "train count",
+      "passed": true,
+      "detail": "2016"
+    },
+    {
+      "check": "validation count",
+      "passed": true,
+      "detail": "501"
+    },
+    {
+      "check": "class counts",
+      "passed": true,
+      "detail": "train {'cardboard': 323, 'glass': 400, 'metal': 327, 'paper': 471, 'plastic': 385, 'trash': 110} val {'cardboard': 80, 'glass': 100, 'metal': 81, 'paper': 117, 'plastic': 96, 'trash': 27}"
+    },
+    {
+      "check": "reader matches the manifest files",
+      "passed": true,
+      "detail": "same path order as train.txt and val.txt"
+    },
+    {
+      "check": "labels follow the six-class folders",
+      "passed": true,
+      "detail": "cardboard 0 through trash 5"
+    },
+    {
+      "check": "path overlap",
+      "passed": true,
+      "detail": "0"
+    },
+    {
+      "check": "excluded files absent and retained files present",
+      "passed": true,
+      "detail": "10 exclusions"
+    },
+    {
+      "check": "P038 stays in training",
+      "passed": true,
+      "detail": "metal149.jpg and metal9.jpg"
+    },
+    {
+      "check": "SHA-256 cross-split overlap",
+      "passed": true,
+      "detail": "[]"
+    },
+    {
+      "check": "each file hash once",
+      "passed": true,
+      "detail": "[]"
+    },
+    {
+      "check": "EXP-001 preprocessing is divide by 255",
+      "passed": true,
+      "detail": "min 0.0000 max 0.9690"
+    },
+    {
+      "check": "EXP-002 preprocessing is MobileNet tf mode",
+      "passed": true,
+      "detail": "min -1.0000 max 0.9379"
+    },
+    {
+      "check": "batch shapes",
+      "passed": true,
+      "detail": "train (32, 224, 224, 3) partial (21, 224, 224, 3)"
+    },
+    {
+      "check": "steps per epoch",
+      "passed": true,
+      "detail": "63 training, 16 validation"
+    },
+    {
+      "check": "training shuffle is a full seeded permutation",
+      "passed": true,
+      "detail": "first index 91"
+    },
+    {
+      "check": "per-class support matches the validation manifest",
+      "passed": true,
+      "detail": "supports cardboard 80, glass 100, metal 81, paper 117, plastic 96, trash 27"
+    },
+    {
+      "check": "six baseline run slots are empty",
+      "passed": true,
+      "detail": "experiments/EXP-001/runs/seed_42/, experiments/EXP-001/runs/seed_123/, experiments/EXP-001/runs/seed_456/, experiments/EXP-002/runs/seed_42/, experiments/EXP-002/runs/seed_123/, experiments/EXP-002/runs/seed_456/"
+    },
+    {
+      "check": "EXP-003 and EXP-004 slots were not created",
+      "passed": true,
+      "detail": "experiments/EXP-003 and experiments/EXP-004"
+    },
+    {
+      "check": "EXP-001 architecture and 10-epoch Adam schedule",
+      "passed": true,
+      "detail": "lr 0.0010000000474974513"
+    },
+    {
+      "check": "EXP-001 inference forward pass",
+      "passed": true,
+      "detail": "shape (32, 6)"
+    },
+    {
+      "check": "EXP-002 phase 1 freezes the ImageNet base",
+      "passed": true,
+      "detail": "base layers 154 lr 0.0010000000474974513"
+    },
+    {
+      "check": "EXP-002 base call keeps the original training=False argument",
+      "passed": true,
+      "detail": "{'training': False, 'mask': None}"
+    },
+    {
+      "check": "EXP-002 phase 2 unfreezes the last 30 layers and their batch norm",
+      "passed": true,
+      "detail": "trainable tail BN: block_13_project_BN, block_14_expand_BN, block_14_depthwise_BN, block_14_project_BN, block_15_expand_BN, block_15_depthwise_BN, block_15_project_BN, block_16_expand_BN, block_16_depthwise_BN, block_16_project_BN, Conv_1_bn"
+    },
+    {
+      "check": "EXP-002 uses one shared checkpoint across both phases",
+      "passed": true,
+      "detail": "/Users/erakastrati/Desktop/WasteClassification/waste-classification-master-thesis/experiments/EXP-002/runs/seed_42/best.keras"
+    },
+    {
+      "check": "seeds 42, 123 and 456 change EXP-001 initialization",
+      "passed": true,
+      "detail": "head (128, 128)"
+    },
+    {
+      "check": "seeds change the EXP-002 head and not the ImageNet weights",
+      "passed": true,
+      "detail": "head (1280, 128)"
+    },
+    {
+      "check": "reporting protocol uses the sample standard deviation",
+      "passed": true,
+      "detail": "0.6000 \u00b1 0.1000"
+    },
+    {
+      "check": "reporter rejects 78-image, 600-image and historical inputs",
+      "passed": true,
+      "detail": "[True, True, True, True]"
+    },
+    {
+      "check": "report is not written before the 12 runs exist",
+      "passed": true,
+      "detail": "summary, checkpoint scoring and run loading all refused"
+    },
+    {
+      "check": "full training entry point refuses to start",
+      "passed": true,
+      "detail": "approve_training remains false"
+    },
+    {
+      "check": "baseline package does not redraw a split",
+      "passed": true,
+      "detail": "no Keras directory split in src/corrected_baselines"
+    },
+    {
+      "check": "EXP-002 recipe does not import the EfficientNet batch-norm freeze",
+      "passed": true,
+      "detail": "phase 2 only sets layer.trainable on the prefix"
+    },
+    {
+      "check": "historical EXP-001 and EXP-002 scripts are still the original recipes",
+      "passed": true,
+      "detail": "train_cnn.py and train_mobilenet.py"
+    },
+    {
+      "check": "no run or comparison directory was created",
+      "passed": true,
+      "detail": "[]"
+    },
+    {
+      "check": "held-out and historical photograph sets were not touched",
+      "passed": true,
+      "detail": "600-set files 607; 78-set files 11"
+    },
+    {
+      "check": "historical and EXP-003 pipeline files unchanged",
+      "passed": true,
+      "detail": "[]"
+    }
+  ],
+  "train_class_counts": {
+    "cardboard": 323,
+    "glass": 400,
+    "metal": 327,
+    "paper": 471,
+    "plastic": 385,
+    "trash": 110
+  },
+  "val_class_counts": {
+    "cardboard": 80,
+    "glass": 100,
+    "metal": 81,
+    "paper": 117,
+    "plastic": 96,
+    "trash": 27
+  },
+  "planned_baseline_runs": [
+    "experiments/EXP-001/runs/seed_42/",
+    "experiments/EXP-001/runs/seed_123/",
+    "experiments/EXP-001/runs/seed_456/",
+    "experiments/EXP-002/runs/seed_42/",
+    "experiments/EXP-002/runs/seed_123/",
+    "experiments/EXP-002/runs/seed_456/"
+  ],
+  "training_started": false
+}

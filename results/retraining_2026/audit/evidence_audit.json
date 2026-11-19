@@ -1,0 +1,61 @@
+{
+  "passed": true,
+  "checks": [
+    {
+      "check": "provenance hashes and class counts",
+      "passed": true,
+      "detail": "results/retraining_2026/manifests/trashnet_seed42_dedup/train.txt"
+    },
+    {
+      "check": "configuration records the approved rules",
+      "passed": true,
+      "detail": "four experiments, class_weight null"
+    },
+    {
+      "check": "environment records software versions",
+      "passed": true,
+      "detail": "python 3.9.21 tf 2.16.2 keras 3.10.0"
+    },
+    {
+      "check": "predictions follow val.txt and keep six probabilities",
+      "passed": true,
+      "detail": "501 rows"
+    },
+    {
+      "check": "paired predictions support McNemar",
+      "passed": true,
+      "detail": "discordant 1/0 p=1.0"
+    },
+    {
+      "check": "evaluation schema matches the four-experiment report",
+      "passed": true,
+      "detail": "accuracy 1.0000 on a synthetic perfect score"
+    },
+    {
+      "check": "three-seed summary uses the sample standard deviation",
+      "passed": true,
+      "detail": "0.6000 \u00b1 0.1000"
+    },
+    {
+      "check": "a phase failure keeps completed epochs and the exception",
+      "passed": true,
+      "detail": "RuntimeError: stopped during phase 2"
+    },
+    {
+      "check": "trainers flush history and write the standard artifacts",
+      "passed": true,
+      "detail": "both trainers"
+    },
+    {
+      "check": "fit arguments and checkpoint rules are unchanged",
+      "passed": true,
+      "detail": "no class weights and no held-out paths"
+    },
+    {
+      "check": "no experiment directory was created",
+      "passed": true,
+      "detail": "[]"
+    }
+  ],
+  "training_started": false
+}

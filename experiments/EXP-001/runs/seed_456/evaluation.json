@@ -1,0 +1,125 @@
+{
+  "metric_set": "VALIDATION",
+  "independent_test_set": false,
+  "note": "VALIDATION accuracy on the corrected 501-image TrashNet split. This split also selects the EXP-002, EXP-003, and EXP-004 checkpoints, and it is the only score available for the EXP-001 weights after epoch 10. It is not independent test accuracy. The historical 78-image set is excluded. The 600-image real-world set stays held out and is not scored here.",
+  "accuracy": 0.5429141716566867,
+  "macro_f1": 0.46372724315385144,
+  "per_class": {
+    "cardboard": {
+      "precision": 0.651685393258427,
+      "recall": 0.725,
+      "f1": 0.6863905325443787,
+      "support": 80
+    },
+    "glass": {
+      "precision": 0.4076923076923077,
+      "recall": 0.53,
+      "f1": 0.4608695652173913,
+      "support": 100
+    },
+    "metal": {
+      "precision": 0.603448275862069,
+      "recall": 0.43209876543209874,
+      "f1": 0.5035971223021583,
+      "support": 81
+    },
+    "paper": {
+      "precision": 0.535483870967742,
+      "recall": 0.7094017094017094,
+      "f1": 0.6102941176470589,
+      "support": 117
+    },
+    "plastic": {
+      "precision": 0.6231884057971014,
+      "recall": 0.4479166666666667,
+      "f1": 0.5212121212121212,
+      "support": 96
+    },
+    "trash": {
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0,
+      "support": 27
+    }
+  },
+  "confusion_matrix": [
+    [
+      58,
+      8,
+      4,
+      7,
+      3,
+      0
+    ],
+    [
+      10,
+      53,
+      6,
+      15,
+      16,
+      0
+    ],
+    [
+      7,
+      17,
+      35,
+      21,
+      1,
+      0
+    ],
+    [
+      3,
+      18,
+      7,
+      83,
+      6,
+      0
+    ],
+    [
+      8,
+      16,
+      6,
+      23,
+      43,
+      0
+    ],
+    [
+      3,
+      18,
+      0,
+      6,
+      0,
+      0
+    ]
+  ],
+  "class_names": [
+    "cardboard",
+    "glass",
+    "metal",
+    "paper",
+    "plastic",
+    "trash"
+  ],
+  "n_validation": 501,
+  "comparison": "corrected_trashnet_seed42_dedup",
+  "experiment": "EXP-001",
+  "training_seed": 456,
+  "val_loss": 1.1300342082977295,
+  "val_accuracy": 0.5429141716566867,
+  "held_out_600_used": false,
+  "historical_78_used": false,
+  "historical_seed_study_included": false,
+  "evaluated_file": "model.keras",
+  "selection_rule": "weights after epoch 10; no ModelCheckpoint and no EarlyStopping",
+  "selection": {
+    "file": "model.keras",
+    "phase": 1,
+    "epoch": 10,
+    "epoch_in_phase": 10,
+    "global_epoch": 10,
+    "rule": "weights after epoch 10; no ModelCheckpoint and no EarlyStopping"
+  },
+  "prediction_file": "val_predictions.csv",
+  "prediction_order": "val.txt",
+  "class_weight": null
+}

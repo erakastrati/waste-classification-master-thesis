@@ -1,0 +1,8 @@
+{
+  "phase": 1,
+  "epoch_in_phase": 6,
+  "global_epoch": 6,
+  "val_accuracy": 0.8682634830474854,
+  "file": "best.keras",
+  "rule": "one ModelCheckpoint across both phases, monitor=val_accuracy, mode=max; an equal val_accuracy does not replace the file; evaluation loads best.keras"
+}

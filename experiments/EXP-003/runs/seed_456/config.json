@@ -1,0 +1,100 @@
+{
+  "comparison": "corrected_trashnet_seed42_dedup",
+  "experiment": "EXP-003",
+  "training_seed": 456,
+  "image_size": [
+    224,
+    224
+  ],
+  "batch_size": 32,
+  "loss": "sparse_categorical_crossentropy",
+  "label_smoothing": null,
+  "metrics": [
+    "accuracy"
+  ],
+  "class_weight": null,
+  "training_shuffle": "full index list shuffled by random.Random(training_seed) every epoch",
+  "validation_order": "sorted val.txt",
+  "selection_rule": "separate phase checkpoints; higher val_accuracy is published; ties keep phase 1",
+  "evaluated_file": "published.keras",
+  "metric_set": "VALIDATION",
+  "architecture": "EfficientNetB0 include_top=False, ImageNet weights, input 224x224x3; GlobalAveragePooling2D, Dense 128 relu, Dropout 0.3, Dense 6 softmax",
+  "initialization": "keras.utils.set_random_seed(training_seed) before build; base weights are ImageNet",
+  "preprocessing": "decode, bilinear resize to 224, keras EfficientNet preprocess_input (no-op). The model stem rescales by 1/255 and applies ImageNet normalization.",
+  "augmentation": null,
+  "optimizer": {
+    "name": "Adam",
+    "beta_1": 0.9,
+    "beta_2": 0.999,
+    "epsilon": 1e-07,
+    "amsgrad": false
+  },
+  "phases": [
+    {
+      "phase": 1,
+      "max_epochs": 10,
+      "learning_rate": 0.001,
+      "base_trainable": false
+    },
+    {
+      "phase": 2,
+      "max_epochs": 15,
+      "learning_rate": 1e-05,
+      "unfreeze_last_n": 30,
+      "batch_norm": "every base batch-norm layer set trainable false before compile"
+    }
+  ],
+  "batch_normalization": "Phase 1 freezes the whole base. Phase 2 unfreezes the last 30 layers, then sets every base batch-norm layer trainable false before the phase-2 compile. The base is called with no training keyword.",
+  "early_stopping": {
+    "monitor": "val_accuracy",
+    "patience": 5,
+    "restore_best_weights": true,
+    "new_object_each_phase": true
+  },
+  "checkpoint": {
+    "files": [
+      "phase1_best.keras",
+      "phase2_best.keras",
+      "published.keras"
+    ],
+    "monitor": "val_accuracy",
+    "mode": "max",
+    "save_best_only": true,
+    "separate_phase_objects": true,
+    "tie": "equal val_accuracy keeps phase 1"
+  },
+  "provenance": {
+    "train_manifest": "results/retraining_2026/manifests/trashnet_seed42_dedup/train.txt",
+    "val_manifest": "results/retraining_2026/manifests/trashnet_seed42_dedup/val.txt",
+    "train_txt_sha256": "bc768a67584e2be3b758a3390de3d90ffb3c4bb90b27e158e422dcf1d468e549",
+    "val_txt_sha256": "b4b344db8ac6e2cc99199ac12754b8fe951ff8c2cf0d36e14e88bb567a022cb5",
+    "manifest_seed": 42,
+    "training_seed": 456,
+    "training_seed_redraws_split": false,
+    "n_train": 2016,
+    "n_validation": 501,
+    "train_class_counts": {
+      "cardboard": 323,
+      "glass": 400,
+      "metal": 327,
+      "paper": 471,
+      "plastic": 385,
+      "trash": 110
+    },
+    "val_class_counts": {
+      "cardboard": 80,
+      "glass": 100,
+      "metal": 81,
+      "paper": 117,
+      "plastic": 96,
+      "trash": 27
+    },
+    "validation_order": "val.txt order"
+  },
+  "git": {
+    "commit": "6a442f75d5e8e3ccb74648846e964d99b7efc368",
+    "dirty": true,
+    "matches_committed_revision": false,
+    "status": "?? experiments/EXP-001/runs/seed_123/config.json\n?? experiments/EXP-001/runs/seed_123/environment.json\n?? experiments/EXP-001/runs/seed_123/evaluation.json\n?? experiments/EXP-001/runs/seed_123/history.json\n?? experiments/EXP-001/runs/seed_123/selection.json\n?? experiments/EXP-001/runs/seed_123/status.json\n?? experiments/EXP-001/runs/seed_123/val_predictions.csv\n?? experiments/EXP-001/runs/seed_123/warnings.txt\n?? experiments/EXP-001/runs/seed_42/config.json\n?? experiments/EXP-001/runs/seed_42/environment.json\n?? experiments/EXP-001/runs/seed_42/evaluation.json\n?? experiments/EXP-001/runs/seed_42/history.json\n?? experiments/EXP-001/runs/seed_42/selection.json\n?? experiments/EXP-001/runs/seed_42/status.json\n?? experiments/EXP-001/runs/seed_42/val_predictions.csv\n?? experiments/EXP-001/runs/seed_42/warnings.txt\n?? experiments/EXP-001/runs/seed_456/config.json\n?? experiments/EXP-001/runs/seed_456/environment.json\n?? experiments/EXP-001/runs/seed_456/evaluation.json\n?? experiments/EXP-001/runs/seed_456/history.json\n?? experiments/EXP-001/runs/seed_456/selection.json\n?? experiments/EXP-001/runs/seed_456/status.json\n?? experiments/EXP-001/runs/seed_456/val_predictions.csv\n?? experiments/EXP-001/runs/seed_456/warnings.txt\n?? experiments/EXP-002/runs/seed_123/config.json\n?? experiments/EXP-002/runs/seed_123/environment.json\n?? experiments/EXP-002/runs/seed_123/evaluation.json\n?? experiments/EXP-002/runs/seed_123/history.json\n?? experiments/EXP-002/runs/seed_123/selection.json\n?? experiments/EXP-002/runs/seed_123/status.json\n?? experiments/EXP-002/runs/seed_123/val_predictions.csv\n?? experiments/EXP-002/runs/seed_123/warnings.txt\n?? experiments/EXP-002/runs/seed_42/config.json\n?? experiments/EXP-002/runs/seed_42/environment.json\n?? experiments/EXP-002/runs/seed_42/evaluation.json\n?? experiments/EXP-002/runs/seed_42/history.json\n?? experiments/EXP-002/runs/seed_42/selection.json\n?? experiments/EXP-002/runs/seed_42/status.json\n?? experiments/EXP-002/runs/seed_42/val_predictions.csv\n?? experiments/EXP-002/runs/seed_42/warnings.txt\n?? experiments/EXP-002/runs/seed_456/config.json\n?? experiments/EXP-002/runs/seed_456/environment.json\n?? experiments/EXP-002/runs/seed_456/evaluation.json\n?? experiments/EXP-002/runs/seed_456/history.json\n?? experiments/EXP-002/runs/seed_456/selection.json\n?? experiments/EXP-002/runs/seed_456/status.json\n?? experiments/EXP-002/runs/seed_456/val_predictions.csv\n?? experiments/EXP-002/runs/seed_456/warnings.txt\n?? experiments/EXP-003/runs/seed_123/config.json\n?? experiments/EXP-003/runs/seed_123/environment.json\n?? experiments/EXP-003/runs/seed_123/evaluation.json\n?? experiments/EXP-003/runs/seed_123/history.json\n?? experiments/EXP-003/runs/seed_123/selection.json\n?? experiments/EXP-003/runs/seed_123/status.json\n?? experiments/EXP-003/runs/seed_123/val_predictions.csv\n?? experiments/EXP-003/runs/seed_123/warnings.txt\n?? experiments/EXP-003/runs/seed_42/config.json\n?? experiments/EXP-003/runs/seed_42/environment.json\n?? experiments/EXP-003/runs/seed_42/evaluation.json\n?? experiments/EXP-003/runs/seed_42/history.json\n?? experiments/EXP-003/runs/seed_42/selection.json\n?? experiments/EXP-003/runs/seed_42/status.json\n?? experiments/EXP-003/runs/seed_42/val_predictions.csv\n?? experiments/EXP-003/runs/seed_42/warnings.txt\n?? experiments/EXP-004/archive/seed_42_failed_no_space_2026-11-19/config.json\n?? experiments/EXP-004/archive/seed_42_failed_no_space_2026-11-19/environment.json\n?? experiments/EXP-004/archive/seed_42_failed_no_space_2026-11-19/history.json\n?? experiments/EXP-004/archive/seed_42_failed_no_space_2026-11-19/status.json\n?? experiments/EXP-004/archive/seed_42_failed_no_space_2026-11-19/warnings.txt\n?? experiments/EXP-004/runs/seed_123/config.json\n?? experiments/EXP-004/runs/seed_123/environment.json\n?? experiments/EXP-004/runs/seed_123/evaluation.json\n?? experiments/EXP-004/runs/seed_123/history.json\n?? experiments/EXP-004/runs/seed_123/selection.json\n?? experiments/EXP-004/runs/seed_123/status.json\n?? experiments/EXP-004/runs/seed_123/val_predictions.csv\n?? experiments/EXP-004/runs/seed_123/warnings.txt\n?? experiments/EXP-004/runs/seed_42/config.json\n?? experiments/EXP-004/runs/seed_42/environment.json\n?? experiments/EXP-004/runs/seed_42/evaluation.json\n?? experiments/EXP-004/runs/seed_42/history.json\n?? experiments/EXP-004/runs/seed_42/selection.json\n?? experiments/EXP-004/runs/seed_42/status.json\n?? experiments/EXP-004/runs/seed_42/val_predictions.csv\n?? experiments/EXP-004/runs/seed_42/warnings.txt\n"
+  }
+}

@@ -1,0 +1,9 @@
+{
+  "file": "phase1_best.keras",
+  "published_file": "published.keras",
+  "phase": 1,
+  "epoch_in_phase": 4,
+  "global_epoch": 4,
+  "val_accuracy": 0.9041916131973267,
+  "tie_rule": "equal val_accuracy keeps phase 1"
+}

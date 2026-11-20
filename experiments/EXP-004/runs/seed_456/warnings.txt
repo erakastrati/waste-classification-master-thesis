@@ -1,0 +1,48 @@
+UserWarning: /Users/erakastrati/Desktop/WasteClassification/waste-classification-master-thesis/venv/lib/python3.9/site-packages/keras/src/models/functional.py:241: The structure of `inputs` doesn't match the expected structure.
+Expected: ['input_layer_1']
+Received: inputs=Tensor(shape=(32, 224, 224, 3))
+UserWarning: /Users/erakastrati/Desktop/WasteClassification/waste-classification-master-thesis/venv/lib/python3.9/site-packages/keras/src/models/functional.py:241: The structure of `inputs` doesn't match the expected structure.
+Expected: ['input_layer_1']
+Received: inputs=Tensor(shape=(32, 224, 224, 3))
+UserWarning: /Users/erakastrati/Desktop/WasteClassification/waste-classification-master-thesis/venv/lib/python3.9/site-packages/keras/src/models/functional.py:241: The structure of `inputs` doesn't match the expected structure.
+Expected: ['input_layer_1']
+Received: inputs=Tensor(shape=(32, 224, 224, 3))
+UserWarning: /Users/erakastrati/Desktop/WasteClassification/waste-classification-master-thesis/venv/lib/python3.9/site-packages/keras/src/models/functional.py:241: The structure of `inputs` doesn't match the expected structure.
+Expected: ['input_layer_1']
+Received: inputs=Tensor(shape=(32, 224, 224, 3))
+UserWarning: /Users/erakastrati/Desktop/WasteClassification/waste-classification-master-thesis/venv/lib/python3.9/site-packages/keras/src/models/functional.py:241: The structure of `inputs` doesn't match the expected structure.
+Expected: ['input_layer_1']
+Received: inputs=Tensor(shape=(32, 224, 224, 3))
+UserWarning: /Users/erakastrati/Desktop/WasteClassification/waste-classification-master-thesis/venv/lib/python3.9/site-packages/keras/src/models/functional.py:241: The structure of `inputs` doesn't match the expected structure.
+Expected: ['input_layer_1']
+Received: inputs=Tensor(shape=(32, 224, 224, 3))
+UserWarning: /Users/erakastrati/Desktop/WasteClassification/waste-classification-master-thesis/venv/lib/python3.9/site-packages/keras/src/models/functional.py:241: The structure of `inputs` doesn't match the expected structure.
+Expected: ['input_layer_1']
+Received: inputs=Tensor(shape=(32, 224, 224, 3))
+UserWarning: /Users/erakastrati/Desktop/WasteClassification/waste-classification-master-thesis/venv/lib/python3.9/site-packages/keras/src/models/functional.py:241: The structure of `inputs` doesn't match the expected structure.
+Expected: ['input_layer_1']
+Received: inputs=Tensor(shape=(32, 224, 224, 3))
+UserWarning: /Users/erakastrati/Desktop/WasteClassification/waste-classification-master-thesis/venv/lib/python3.9/site-packages/keras/src/models/functional.py:241: The structure of `inputs` doesn't match the expected structure.
+Expected: ['input_layer_1']
+Received: inputs=Tensor(shape=(32, 224, 224, 3))
+UserWarning: /Users/erakastrati/Desktop/WasteClassification/waste-classification-master-thesis/venv/lib/python3.9/site-packages/keras/src/models/functional.py:241: The structure of `inputs` doesn't match the expected structure.
+Expected: ['input_layer_1']
+Received: inputs=Tensor(shape=(32, 224, 224, 3))
+UserWarning: /Users/erakastrati/Desktop/WasteClassification/waste-classification-master-thesis/venv/lib/python3.9/site-packages/keras/src/models/functional.py:241: The structure of `inputs` doesn't match the expected structure.
+Expected: ['input_layer_1']
+Received: inputs=Tensor(shape=(32, 224, 224, 3))
+UserWarning: /Users/erakastrati/Desktop/WasteClassification/waste-classification-master-thesis/venv/lib/python3.9/site-packages/keras/src/models/functional.py:241: The structure of `inputs` doesn't match the expected structure.
+Expected: ['input_layer_1']
+Received: inputs=Tensor(shape=(32, 224, 224, 3))
+UserWarning: /Users/erakastrati/Desktop/WasteClassification/waste-classification-master-thesis/venv/lib/python3.9/site-packages/keras/src/models/functional.py:241: The structure of `inputs` doesn't match the expected structure.
+Expected: ['input_layer_1']
+Received: inputs=Tensor(shape=(32, 224, 224, 3))
+UserWarning: /Users/erakastrati/Desktop/WasteClassification/waste-classification-master-thesis/venv/lib/python3.9/site-packages/keras/src/models/functional.py:241: The structure of `inputs` doesn't match the expected structure.
+Expected: ['input_layer_1']
+Received: inputs=Tensor(shape=(32, 224, 224, 3))
+UserWarning: /Users/erakastrati/Desktop/WasteClassification/waste-classification-master-thesis/venv/lib/python3.9/site-packages/keras/src/models/functional.py:241: The structure of `inputs` doesn't match the expected structure.
+Expected: ['input_layer_1']
+Received: inputs=Tensor(shape=(32, 224, 224, 3))
+UserWarning: /Users/erakastrati/Desktop/WasteClassification/waste-classification-master-thesis/venv/lib/python3.9/site-packages/keras/src/models/functional.py:241: The structure of `inputs` doesn't match the expected structure.
+Expected: ['input_layer_1']
+Received: inputs=Tensor(shape=(21, 224, 224, 3))

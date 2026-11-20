@@ -1,0 +1,22 @@
+{
+  "python": "3.9.21 (main, Dec  3 2024, 17:50:13) \n[Clang 16.0.0 (clang-1600.0.26.4)]",
+  "python_version": "3.9.21",
+  "numpy": "1.26.4",
+  "tensorflow": "2.16.2",
+  "keras": "3.10.0",
+  "platform": "macOS-15.7.9-x86_64-i386-64bit",
+  "processor": "i386",
+  "machine": "x86_64",
+  "system": "Darwin",
+  "devices": [
+    {
+      "type": "CPU",
+      "name": "/physical_device:CPU:0"
+    }
+  ],
+  "TF_DETERMINISTIC_OPS": null,
+  "TF_CUDNN_DETERMINISTIC": null,
+  "op_determinism_enabled": false,
+  "tf_data_pipeline_deterministic": true,
+  "bit_for_bit_guarantee": false
+}

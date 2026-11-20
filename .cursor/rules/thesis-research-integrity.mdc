@@ -1,0 +1,23 @@
+---
+description: Consult the MSc thesis retraining and research integrity protocol before methodological decisions
+alwaysApply: true
+---
+
+# Thesis research integrity
+
+Before any important decision in this thesis, read the full protocol in `docs/research_integrity_protocol.md`. Follow that document. Do not treat this rule as a substitute for it.
+
+Read the protocol before decisions about:
+
+- Dataset preparation and leakage checks.
+- Model training or fine-tuning.
+- Checkpoint selection and lineage.
+- Evaluation and statistical comparisons.
+- Evidence preservation and reproducibility.
+- Thesis committee requirements.
+
+Historical statements in the protocol are claims to check against the repository, manifests, checkpoints, and logs. A statement in the protocol is not, by itself, proof.
+
+Do not start training, change datasets, overwrite checkpoints, or replace historical results unless the protocol's preflight is satisfied and the user has explicitly authorized that action.
+
+For an important technical decision, answer in the protocol's format: current state, relevant requirements, risk assessment, evidence, decision (GO / NO-GO / NEEDS VERIFICATION), next action, and retraining impact.

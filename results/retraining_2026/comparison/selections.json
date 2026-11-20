@@ -1,0 +1,122 @@
+[
+  {
+    "experiment": "EXP-001",
+    "training_seed": 42,
+    "file": "model.keras",
+    "phase": 1,
+    "epoch_in_phase": 10,
+    "global_epoch": 10,
+    "val_accuracy": 0.5528942115768463,
+    "macro_f1": 0.4711978146891786
+  },
+  {
+    "experiment": "EXP-001",
+    "training_seed": 123,
+    "file": "model.keras",
+    "phase": 1,
+    "epoch_in_phase": 10,
+    "global_epoch": 10,
+    "val_accuracy": 0.5429141716566867,
+    "macro_f1": 0.46302574933135393
+  },
+  {
+    "experiment": "EXP-001",
+    "training_seed": 456,
+    "file": "model.keras",
+    "phase": 1,
+    "epoch_in_phase": 10,
+    "global_epoch": 10,
+    "val_accuracy": 0.5429141716566867,
+    "macro_f1": 0.46372724315385144
+  },
+  {
+    "experiment": "EXP-002",
+    "training_seed": 42,
+    "file": "best.keras",
+    "phase": 1,
+    "epoch_in_phase": 5,
+    "global_epoch": 5,
+    "val_accuracy": 0.8662674650698603,
+    "macro_f1": 0.8562664553531283
+  },
+  {
+    "experiment": "EXP-002",
+    "training_seed": 123,
+    "file": "best.keras",
+    "phase": 1,
+    "epoch_in_phase": 10,
+    "global_epoch": 10,
+    "val_accuracy": 0.8642714570858283,
+    "macro_f1": 0.8562328215175969
+  },
+  {
+    "experiment": "EXP-002",
+    "training_seed": 456,
+    "file": "best.keras",
+    "phase": 1,
+    "epoch_in_phase": 6,
+    "global_epoch": 6,
+    "val_accuracy": 0.8682634730538922,
+    "macro_f1": 0.8616027799692499
+  },
+  {
+    "experiment": "EXP-003",
+    "training_seed": 42,
+    "file": "phase2_best.keras",
+    "phase": 2,
+    "epoch_in_phase": 7,
+    "global_epoch": 17,
+    "val_accuracy": 0.9021956087824351,
+    "macro_f1": 0.8987330183454955
+  },
+  {
+    "experiment": "EXP-003",
+    "training_seed": 123,
+    "file": "phase1_best.keras",
+    "phase": 1,
+    "epoch_in_phase": 4,
+    "global_epoch": 4,
+    "val_accuracy": 0.9041916167664671,
+    "macro_f1": 0.8971580658267772
+  },
+  {
+    "experiment": "EXP-003",
+    "training_seed": 456,
+    "file": "phase2_best.keras",
+    "phase": 2,
+    "epoch_in_phase": 3,
+    "global_epoch": 13,
+    "val_accuracy": 0.9141716566866267,
+    "macro_f1": 0.909777667221356
+  },
+  {
+    "experiment": "EXP-004",
+    "training_seed": 42,
+    "file": "phase1_best.keras",
+    "phase": 1,
+    "epoch_in_phase": 7,
+    "global_epoch": 7,
+    "val_accuracy": 0.908183632734531,
+    "macro_f1": 0.9021894270061918
+  },
+  {
+    "experiment": "EXP-004",
+    "training_seed": 123,
+    "file": "phase2_best.keras",
+    "phase": 2,
+    "epoch_in_phase": 14,
+    "global_epoch": 24,
+    "val_accuracy": 0.908183632734531,
+    "macro_f1": 0.8960937644890389
+  },
+  {
+    "experiment": "EXP-004",
+    "training_seed": 456,
+    "file": "phase2_best.keras",
+    "phase": 2,
+    "epoch_in_phase": 2,
+    "global_epoch": 12,
+    "val_accuracy": 0.906187624750499,
+    "macro_f1": 0.9017290368590035
+  }
+]

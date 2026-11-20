@@ -15,7 +15,7 @@ results/retraining_2026/**
 !results/retraining_2026/**/*.py
 !results/retraining_2026/**/*.txt
 results/retraining_2026/experiments/**/runs/
-results/retraining_2026/comparison/
+results/retraining_2026/comparison/curves/
 *.h5
 *.keras
 .vscode/

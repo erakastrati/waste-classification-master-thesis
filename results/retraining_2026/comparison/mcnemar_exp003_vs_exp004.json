@@ -1,0 +1,52 @@
+{
+  "comparison": "EXP-003 versus EXP-004",
+  "analysis": "exploratory validation-set analysis; not an independent test",
+  "metric_set": "VALIDATION",
+  "independent_test_set": false,
+  "historical_seed_study_included": false,
+  "held_out_600_used": false,
+  "by_seed": {
+    "42": {
+      "n": 501,
+      "both_correct": 439,
+      "both_wrong": 33,
+      "left_only_correct": 13,
+      "right_only_correct": 16,
+      "mcnemar_exact_p": 0.711071103811264,
+      "test": "two-sided exact McNemar on discordant validation pairs",
+      "metric_set": "VALIDATION",
+      "independent_test_set": false,
+      "seed": 42,
+      "left_experiment": "EXP-003",
+      "right_experiment": "EXP-004"
+    },
+    "123": {
+      "n": 501,
+      "both_correct": 444,
+      "both_wrong": 37,
+      "left_only_correct": 9,
+      "right_only_correct": 11,
+      "mcnemar_exact_p": 0.8238029479980469,
+      "test": "two-sided exact McNemar on discordant validation pairs",
+      "metric_set": "VALIDATION",
+      "independent_test_set": false,
+      "seed": 123,
+      "left_experiment": "EXP-003",
+      "right_experiment": "EXP-004"
+    },
+    "456": {
+      "n": 501,
+      "both_correct": 444,
+      "both_wrong": 33,
+      "left_only_correct": 14,
+      "right_only_correct": 10,
+      "mcnemar_exact_p": 0.5412561893463135,
+      "test": "two-sided exact McNemar on discordant validation pairs",
+      "metric_set": "VALIDATION",
+      "independent_test_set": false,
+      "seed": 456,
+      "left_experiment": "EXP-003",
+      "right_experiment": "EXP-004"
+    }
+  }
+}
